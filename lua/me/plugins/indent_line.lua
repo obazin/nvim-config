@@ -5,7 +5,7 @@ return {
     -- See `:help ibl`
     main = 'ibl',
     opts = {
-      debounce = 600,
+      debounce = 200,
       indent = {
         char = '│',
       },
