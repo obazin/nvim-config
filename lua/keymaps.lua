@@ -40,5 +40,5 @@ vim.keymap.set('i', 'jk', '<ESC>', { desc = 'Exit insert mode with jk' })
 vim.keymap.set('n', 'x', '"_x')
 
 -- buffer navigation
-vim.keymap.set('n', '<C-Tab>', ':bnext<CR>', { desc = 'Move to next buffer' })
-vim.keymap.set('n', '<C-S-Tab>', ':bprev<CR>', { desc = 'Move to previous buffer' })
+vim.keymap.set('n', '<F9>', ':bnext<CR>', { desc = 'Move to next buffer' })
+vim.keymap.set('n', '<F10>', ':bprev<CR>', { desc = 'Move to previous buffer' })
