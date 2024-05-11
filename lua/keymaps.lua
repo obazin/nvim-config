@@ -33,6 +33,10 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Windows splitting
+vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split buffer vertically' })
+vim.keymap.set('n', '<leader>wh', '<C-w>s', { desc = 'Split buffer horizontally' })
+
 -- use jk to exit insert mode
 vim.keymap.set('i', 'jk', '<ESC>', { desc = 'Exit insert mode with jk' })
 
