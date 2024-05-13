@@ -8,9 +8,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 require 'options'
-
 require 'keymaps'
-
 require 'autocommands'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -30,7 +28,8 @@ require('lazy').setup {
   require 'plugins.lang.formatting',
   require 'plugins.lang.completion',
   -- Theme
-  require 'plugins.themes.tokyonight',
+  -- require 'plugins.themes.tokyonight',
+  require 'plugins.themes.catpuccin',
   -- TODO comments management
   require 'plugins.display.todo-comments',
   require 'plugins.ui-modules.mini',
