@@ -39,6 +39,7 @@ require('lazy').setup {
   require 'plugins.display.indent_line',
   -- require 'plugins.lang.lint',
   require 'plugins.editing.autopairs',
+  require 'plugins.editing.comment',
   require 'plugins.navigation.neo-tree',
   -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
