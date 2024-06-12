@@ -1,8 +1,28 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   build = ':TSUpdate',
+  dependencies = {
+    'windwp/nvim-ts-autotag',
+  },
   opts = {
-    ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'python', 'rust', 'vim', 'vimdoc' },
+    ensure_installed = {
+      'bash',
+      'c',
+      'html',
+      'javascript',
+      'json',
+      'lua',
+      'luadoc',
+      'markdown',
+      'markdown_inline',
+      'python',
+      'rust',
+      'typescript',
+      'tsx',
+      'vim',
+      'vimdoc',
+      'yaml',
+    },
     -- Autoinstall languages that are not installed
     auto_install = true,
     highlight = {
@@ -13,6 +33,7 @@ return { -- Highlight, edit, and navigate code
       additional_vim_regex_highlighting = { 'ruby' },
     },
     indent = { enable = true, disable = { 'ruby' } },
+    autotag = { enable = true },
   },
   config = function(_, opts)
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
