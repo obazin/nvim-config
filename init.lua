@@ -25,6 +25,7 @@ require('lazy').setup {
   require 'plugins.ui-modules.noice',
   require 'plugins.ui-modules.which-key',
   require 'plugins.ui-modules.telescope',
+  require 'plugins.ui-modules.zen',
   -- Lang support
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
