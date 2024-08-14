@@ -28,6 +28,7 @@ require('lazy').setup {
   require 'plugins.ui-modules.zen',
   -- require 'plugins.display.transparent',
   require 'plugins.ui-modules.aerial',
+  require 'plugins.display.folding',
   -- Lang support
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
