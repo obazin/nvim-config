@@ -49,6 +49,7 @@ require('lazy').setup {
   require 'plugins.editing.comment',
   require 'plugins.navigation.neo-tree',
   require 'plugins.ai.chatgpt',
+  require 'plugins.editing.neoclip',
   -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
 
