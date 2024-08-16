@@ -48,6 +48,7 @@ require('lazy').setup {
   require 'plugins.editing.autopairs',
   require 'plugins.editing.comment',
   require 'plugins.navigation.neo-tree',
+  require 'plugins.ai.chatgpt',
   -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
 
