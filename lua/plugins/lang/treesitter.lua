@@ -8,6 +8,8 @@ return { -- Highlight, edit, and navigate code
     ensure_installed = {
       'bash',
       'c',
+      'css',
+      'dockerfile',
       'html',
       'javascript',
       'json',
@@ -17,6 +19,7 @@ return { -- Highlight, edit, and navigate code
       'markdown_inline',
       'python',
       'rust',
+      'svelte',
       'typescript',
       'tsx',
       'vim',
