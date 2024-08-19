@@ -16,7 +16,6 @@ return {
   opts = {
     filesystem = {
       window = {
-        position = 'float',
         mappings = {
           ['<leader>ee'] = 'close_window',
         },
