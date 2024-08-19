@@ -165,6 +165,9 @@ return { -- LSP Configuration & Plugins
       -- clangd = {},
       -- gopls = {},
       bashls = {},
+      emmet_ls = {
+        filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
+      },
       pyright = {},
       rust_analyzer = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -189,6 +192,18 @@ return { -- LSP Configuration & Plugins
             -- diagnostics = { disable = { 'missing-fields' } },
           },
         },
+      },
+      svelte = {
+        -- configure svelte server
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd('BufWritePost', {
+            pattern = { '*.js', '*.ts' },
+            callback = function(ctx)
+              -- Here use ctx.match instead of ctx.file
+              client.notify('$/onDidChangeTsOrJsFile', { uri = ctx.match })
+            end,
+          })
+        end,
       },
     }
 

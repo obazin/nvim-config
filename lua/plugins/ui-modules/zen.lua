@@ -28,7 +28,7 @@ return {
         enabled = true,
         ruler = false, -- disables the ruler text in the cmd line area
         showcmd = false, -- disables the command in the last line of the screen
-        -- you may turn on/off statusline in zen mode by setting 'laststatus' 
+        -- you may turn on/off statusline in zen mode by setting 'laststatus'
         -- statusline will be shown only if 'laststatus' == 3
         laststatus = 0, -- turn off the statusline in zen mode
       },
@@ -41,29 +41,27 @@ return {
       -- - allow_remote_control socket-only
       -- - listen_on unix:/tmp/kitty
       kitty = {
-        enabled = false,
-        font = "+4", -- font size increment
+        enabled = true,
+        font = '+4', -- font size increment
       },
       -- this will change the font size on alacritty when in zen mode
       -- requires  Alacritty Version 0.10.0 or higher
       -- uses `alacritty msg` subcommand to change font size
       alacritty = {
         enabled = false,
-        font = "14", -- font size
+        font = '14', -- font size
       },
       -- this will change the font size on wezterm when in zen mode
       -- See alse also the Plugins/Wezterm section in this projects README
       wezterm = {
         enabled = false,
         -- can be either an absolute font size or the number of incremental steps
-        font = "+4", -- (10% increase per step)
+        font = '+4', -- (10% increase per step)
       },
     },
     -- callback where you can add custom code when the Zen window opens
-    on_open = function(win)
-    end,
+    on_open = function(win) end,
     -- callback where you can add custom code when the Zen window closes
-    on_close = function()
-    end,
+    on_close = function() end,
   },
 }
