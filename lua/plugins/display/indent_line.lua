@@ -7,7 +7,7 @@ return {
     opts = {
       debounce = 200,
       indent = {
-        char = '│',
+        char = '▏',
       },
     },
   },
