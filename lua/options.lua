@@ -60,3 +60,12 @@ vim.opt.scrolloff = 10
 
 -- Global status on
 vim.o.laststatus = 3
+
+-- Fine tune diagnostics look & feel (virutal text can sometimes be invasive)
+vim.diagnostic.config {
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = false,
+}
