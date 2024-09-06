@@ -44,6 +44,7 @@ require('lazy').setup {
   require 'plugins.lang.treesitter',
   -- require 'plugins.lang.debug',
   require 'plugins.display.indent_line',
+  require 'plugins.ui-modules.trouble',
   -- require 'plugins.lang.lint',
   require 'plugins.editing.autopairs',
   require 'plugins.editing.comment',
