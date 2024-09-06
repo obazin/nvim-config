@@ -43,6 +43,7 @@ require('lazy').setup {
   -- Tressitter support
   require 'plugins.lang.treesitter',
   -- require 'plugins.lang.debug',
+  require 'plugins.lang.markdown',
   require 'plugins.display.indent_line',
   require 'plugins.ui-modules.trouble',
   -- require 'plugins.lang.lint',
