@@ -34,6 +34,7 @@ require('lazy').setup {
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
   require 'plugins.lang.completion',
+  require 'plugins.lang.rustacean',
   -- Theme
   -- require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',
