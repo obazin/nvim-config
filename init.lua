@@ -39,8 +39,11 @@ require('lazy').setup {
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
   require 'plugins.lang.completion',
-  require 'plugins.lang.rustacean',
   require 'plugins.lang.tailwind-tools',
+  require 'plugins.lang.rustacean',
+  -- Debug support
+  require 'plugins.debug.nvim-dap',
+  require 'plugins.debug.nvim-dap-ui',
   -- Theme
   -- require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',

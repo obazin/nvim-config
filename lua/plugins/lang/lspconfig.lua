@@ -170,7 +170,7 @@ return { -- LSP Configuration & Plugins
         filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
       },
       pyright = {},
-      rust_analyzer = {},
+      -- rust_analyzer = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
       --
       -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -178,8 +178,6 @@ return { -- LSP Configuration & Plugins
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
       -- tsserver = {},
-      --
-
       lua_ls = {
         -- cmd = {...},
         -- filetypes = { ...},
@@ -284,6 +282,7 @@ return { -- LSP Configuration & Plugins
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
       'shfmt',
+      'codelldb', -- DAP adapter for Rust and other languages
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
