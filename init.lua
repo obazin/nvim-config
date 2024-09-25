@@ -8,6 +8,11 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 vim.o.laststatus = 3
 
+vim.opt.formatoptions = 'tcqn'
+vim.opt.wrap = true
+vim.opt.textwidth = 120
+vim.o.conceallevel = 2
+
 require 'options'
 require 'keymaps'
 require 'autocommands'
