@@ -74,7 +74,7 @@ return {
         sky = '#91d7e3', -- Unchanged
         sapphire = '#7dc4e4', -- Unchanged
         blue = '#8aadf4', -- Unchanged
-        lavender = '#8d95df', -- Further darkened
+        lavender = '#b7bdf8', -- Further darkened
         text = '#cad3f5', -- Unchanged
         subtext1 = '#b8c0e0', -- Unchanged
         subtext0 = '#a5adcb', -- Unchanged
