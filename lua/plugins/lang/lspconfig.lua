@@ -205,6 +205,14 @@ return { -- LSP Configuration & Plugins
           })
         end,
       },
+      volar = {
+        init_options = {
+          vue = {
+            hybridMode = true,
+          },
+        },
+      },
+      vtsls = {},
     }
 
     -- Ensure the servers and tools above are installed
