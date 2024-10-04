@@ -40,6 +40,7 @@ require('lazy').setup {
   require 'plugins.lang.formatting',
   require 'plugins.lang.completion',
   require 'plugins.lang.rustacean',
+  require 'plugins.lang.tailwind-tools',
   -- Theme
   -- require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',
