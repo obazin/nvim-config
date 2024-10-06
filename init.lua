@@ -42,8 +42,7 @@ require('lazy').setup {
   require 'plugins.lang.tailwind-tools',
   require 'plugins.lang.rustacean',
   -- Debug support
-  require 'plugins.debug.nvim-dap',
-  require 'plugins.debug.nvim-dap-ui',
+  require 'plugins.lang.debug',
   -- Theme
   -- require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',
