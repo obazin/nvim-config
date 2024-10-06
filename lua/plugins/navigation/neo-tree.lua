@@ -30,6 +30,7 @@ return {
         never_show = {},
       },
       window = {
+        position = 'float',
         mappings = {
           ['<leader>ee'] = 'close_window',
         },
