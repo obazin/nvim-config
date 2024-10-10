@@ -166,6 +166,28 @@ return { -- LSP Configuration & Plugins
       -- gopls = {},
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       bashls = {},
+      cssls = {
+        settings = {
+          css = {
+            validate = true,
+            lint = {
+              unknownAtRules = 'ignore',
+            },
+          },
+          scss = {
+            validate = true,
+            lint = {
+              unknownAtRules = 'ignore',
+            },
+          },
+          less = {
+            validate = true,
+            lint = {
+              unknownAtRules = 'ignore',
+            },
+          },
+        },
+      },
       emmet_ls = {
         filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
       },
@@ -264,7 +286,26 @@ return { -- LSP Configuration & Plugins
         -- add additional filetypes to the default_config
         filetypes_include = {},
         -- to fully override the default_config, change the below
-        -- filetypes = {}
+        filetypes = {
+          'html',
+          'css',
+          'scss',
+          'javascript',
+          'javascriptreact',
+          'typescript',
+          'typescriptreact',
+          'svelte',
+        },
+        settings = {
+          tailwindCSS = {
+            experimental = {
+              classRegex = {
+                'tw`([^`]*)`', -- tw`...`
+                'tw\\(([^)]*)\\)', -- tw(...)
+              },
+            },
+          },
+        },
       },
     }
 
