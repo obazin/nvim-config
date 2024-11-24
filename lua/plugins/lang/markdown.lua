@@ -76,7 +76,7 @@ return {
       -- Determines where language icon is rendered:
       --  right: right side of code block
       --  left:  left side of code block
-      position = 'right',
+      position = 'left',
       -- Amount of padding to add around the language
       language_pad = 2,
       -- An array of language names for which background highlighting will be disabled
