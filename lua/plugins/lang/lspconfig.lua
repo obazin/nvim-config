@@ -216,6 +216,10 @@ return { -- LSP Configuration & Plugins
       dockerls = {},
       docker_compose_language_service = {},
       pylsp = {
+        cmd_env = {
+          VIRTUAL_ENV = '.venv',
+          -- PATH = lsputil.path.join('.venv', 'bin') .. ':' .. vim.env.PATH,
+        },
         settings = {
           pylsp = {
             plugins = {
@@ -227,6 +231,7 @@ return { -- LSP Configuration & Plugins
               pylsp_mypy = { enabled = false },
               pylsp_black = { enabled = false },
               pylsp_isort = { enabled = false },
+              ruff = { enabled = true },
             },
           },
         },
