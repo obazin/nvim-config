@@ -48,7 +48,7 @@ require('lazy').setup {
   require 'plugins.themes.catpuccin',
   -- TODO comments management
   require 'plugins.display.todo-comments',
-  require 'plugins.ui-modules.mini',
+  -- require 'plugins.ui-modules.mini',
   -- Tressitter support
   require 'plugins.lang.treesitter',
   -- require 'plugins.lang.debug',
