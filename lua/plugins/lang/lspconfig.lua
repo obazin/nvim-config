@@ -152,6 +152,18 @@ return { -- LSP Configuration & Plugins
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+    -- Needed to detect root for monorepo exposing several not correlated projects with uv
+    local util = require 'lspconfig.util'
+
+    -- Auto-detect venv
+    local function get_python_env(workspace)
+      local venv_path = workspace .. '/.venv'
+      if vim.fn.isdirectory(venv_path) == 1 then
+        return venv_path
+      end
+      return nil -- No virtual environment found
+    end
+
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
     --
@@ -191,6 +203,7 @@ return { -- LSP Configuration & Plugins
       emmet_ls = {
         filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
       },
+      -- pyright = {},
       -- rust_analyzer = {},
       -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
       --
@@ -216,9 +229,10 @@ return { -- LSP Configuration & Plugins
       dockerls = {},
       docker_compose_language_service = {},
       pylsp = {
+        root_dir = util.root_pattern 'pyproject.toml', -- Ensures correct project root detection
         cmd_env = {
-          VIRTUAL_ENV = '.venv',
-          -- PATH = lsputil.path.join('.venv', 'bin') .. ':' .. vim.env.PATH,
+          VIRTUAL_ENV = get_python_env(vim.fn.getcwd()),
+          PATH = vim.fn.getcwd() .. '/.venv/bin:' .. vim.env.PATH,
         },
         settings = {
           pylsp = {
