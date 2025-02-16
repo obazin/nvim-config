@@ -68,7 +68,7 @@ vim.o.laststatus = 3
 
 -- Fine tune diagnostics look & feel (virutal text can sometimes be invasive)
 vim.diagnostic.config {
-  virtual_text = false,
+  virtual_text = true,
   signs = true,
   underline = true,
   update_in_insert = false,
