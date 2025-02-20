@@ -5,6 +5,9 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+      local mypy = require 'lint.linters.mypy'
+      -- Append the extra argument
+      table.insert(mypy.args, '--ignore-missing-imports')
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
         python = { 'mypy' },
@@ -48,7 +51,7 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          require('lint').try_lint()
+          lint.try_lint()
         end,
       })
     end,

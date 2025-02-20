@@ -56,7 +56,7 @@ require('lazy').setup {
   require 'plugins.ui-modules.obsidian',
   require 'plugins.display.indent_line',
   require 'plugins.ui-modules.trouble',
-  -- require 'plugins.lang.lint',
+  require 'plugins.lang.lint',
   require 'plugins.editing.autopairs',
   require 'plugins.editing.comment',
   require 'plugins.navigation.neo-tree',
