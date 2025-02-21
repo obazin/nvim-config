@@ -22,14 +22,66 @@ return {
     enable_diagnostics = true,
     open_files_do_not_replace_types = { 'terminal', 'trouble', 'qf' }, -- when opening files, do not use windows containing these filetypes or buftypes
     sort_case_insensitive = false, -- used when sorting files and directories in the tree
-    sort_function = nil, -- use a custom function for sorting files and directories in the tree
-    -- sort_function = function (a,b)
-    --       if a.type == b.type then
-    --           return a.path > b.path
-    --       else
-    --           return a.type > b.type
-    --       end
-    --   end , -- this sorts files and directories descendantly
+    -- sort_function implements these criterias :
+    -- Dotfiles first
+    -- Config/Shell script files second
+    -- Regular files grouped by extension
+    -- Markdown files last (README.md first)
+    -- Directories always listed before files
+    sort_function = function(a, b)
+      -- Always keep directories before files
+      local is_dir_a = (a.type == 'directory')
+      local is_dir_b = (b.type == 'directory')
+      if is_dir_a ~= is_dir_b then
+        return is_dir_a -- Directories first
+      end
+
+      -- Function to determine the sorting priority of a file
+      local function get_priority(file)
+        local path = file.path
+
+        if path:match '/%.' then
+          return 1
+        end -- Dotfiles (highest priority)
+        if path:match 'README%.md$' then
+          return 4
+        end -- README.md (last group but first in markdown)
+        if
+          path:match '%.sh$'
+          or path:match '%.zsh$'
+          or path:match '%.json$'
+          or path:match '%.toml$'
+          or path:match '%.yml$'
+        then
+          return 2
+        end -- Config/Shell scripts
+        if path:match '%.md$' then
+          return 5
+        end -- Markdown files (last group)
+
+        return 3 -- Regular files (sorted by extension)
+      end
+
+      -- Compare based on priority
+      local priority_a = get_priority(a)
+      local priority_b = get_priority(b)
+      if priority_a ~= priority_b then
+        return priority_a < priority_b
+      end
+
+      -- If priority is the same, apply further sorting rules:
+      if priority_a == 3 then
+        -- Group regular files by extension
+        local ext_a = a.path:match '^.+%.(.+)$' or ''
+        local ext_b = b.path:match '^.+%.(.+)$' or ''
+        if ext_a ~= ext_b then
+          return ext_a < ext_b
+        end
+      end
+
+      -- Final fallback: alphabetical order
+      return a.path < b.path
+    end,
     default_component_configs = {
       container = {
         enable_character_fade = true,
