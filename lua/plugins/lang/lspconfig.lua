@@ -257,14 +257,16 @@ return { -- LSP Configuration & Plugins
           vim.api.nvim_create_autocmd('BufWritePre', {
             buffer = bufnr,
             callback = function()
-              local params = vim.lsp.util.make_range_params()
-              params.context = { only = { 'source.organizeImports' } }
-              vim.lsp.buf.execute_command {
+              local params = {
                 command = 'ruff.applyOrganizeImports',
                 arguments = {
-                  { uri = vim.uri_from_bufnr(bufnr) },
+                  {
+                    uri = vim.uri_from_bufnr(bufnr),
+                    version = vim.lsp.util.buf_versions[bufnr] or 0, -- Ensure version is provided
+                  },
                 },
               }
+              vim.lsp.buf.execute_command(params)
             end,
           })
         end,
