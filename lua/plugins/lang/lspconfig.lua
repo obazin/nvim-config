@@ -253,6 +253,21 @@ return { -- LSP Configuration & Plugins
       ruff = {
         -- Notes on code actions: https://github.com/astral-sh/ruff-lsp/issues/119#issuecomment-1595628355
         -- Get isort like behavior: https://github.com/astral-sh/ruff/issues/8926#issuecomment-1834048218
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            buffer = bufnr,
+            callback = function()
+              local params = vim.lsp.util.make_range_params()
+              params.context = { only = { 'source.organizeImports' } }
+              vim.lsp.buf.execute_command {
+                command = 'ruff.applyOrganizeImports',
+                arguments = {
+                  { uri = vim.uri_from_bufnr(bufnr) },
+                },
+              }
+            end,
+          })
+        end,
         commands = {
           RuffAutofix = {
             function()
