@@ -5,6 +5,9 @@ return {
     -- See `:help ibl`
     main = 'ibl',
     opts = {
+      exclude = {
+        filetypes = { 'markdown', 'md' },
+      },
       debounce = 200,
       indent = {
         char = '▏',

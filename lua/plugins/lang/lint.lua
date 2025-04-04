@@ -9,7 +9,7 @@ return {
       -- Append the extra argument
       table.insert(mypy.args, '--ignore-missing-imports')
       lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
+        -- markdown = { 'markdownlint' },
         python = { 'mypy' },
       }
 
