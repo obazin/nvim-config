@@ -342,6 +342,13 @@ return { -- LSP Configuration & Plugins
           },
         },
       },
+      tinymist = {
+        settings = {
+          formatterMode = 'typstyle',
+          exportPdf = 'onType',
+          semanticTokens = 'disable',
+        },
+      },
     }
 
     -- Ensure the servers and tools above are installed
