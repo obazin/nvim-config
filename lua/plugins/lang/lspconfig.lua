@@ -288,45 +288,61 @@ return { -- LSP Configuration & Plugins
         },
       },
       ruff = {
-        -- Notes on code actions: https://github.com/astral-sh/ruff-lsp/issues/119#issuecomment-1595628355
-        -- Get isort like behavior: https://github.com/astral-sh/ruff/issues/8926#issuecomment-1834048218
         on_attach = function(client, bufnr)
           vim.api.nvim_create_autocmd('BufWritePre', {
             buffer = bufnr,
             callback = function()
-              local params = {
-                command = 'ruff.applyOrganizeImports',
-                arguments = {
-                  {
-                    uri = vim.uri_from_bufnr(bufnr),
-                    version = vim.lsp.util.buf_versions[bufnr] or 0, -- Ensure version is provided
-                  },
-                },
-              }
-              vim.lsp.buf.execute_command(params)
+              local uri = vim.uri_from_bufnr(bufnr)
+              local clients = vim.lsp.get_clients { bufnr = bufnr }
+              for _, lsp_client in ipairs(clients) do
+                if lsp_client.name == 'ruff' then
+                  lsp_client:exec_cmd {
+                    title = 'Organize Imports',
+                    command = 'ruff.applyOrganizeImports',
+                    arguments = {
+                      {
+                        uri = uri,
+                        version = vim.lsp.util.buf_versions[bufnr] or 0,
+                      },
+                    },
+                  }
+                end
+              end
             end,
           })
         end,
+
         commands = {
           RuffAutofix = {
             function()
-              vim.lsp.buf.execute_command {
-                command = 'ruff.applyAutofix',
-                arguments = {
-                  { uri = vim.uri_from_bufnr(0) },
-                },
-              }
+              local bufnr = vim.api.nvim_get_current_buf()
+              local uri = vim.uri_from_bufnr(bufnr)
+              for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+                if client.name == 'ruff' then
+                  client:exec_cmd {
+                    title = 'Apply Auto Fix',
+                    command = 'ruff.applyAutofix',
+                    arguments = { { uri = uri } },
+                  }
+                end
+              end
             end,
             description = 'Ruff: Fix all auto-fixable problems',
           },
+
           RuffOrganizeImports = {
             function()
-              vim.lsp.buf.execute_command {
-                command = 'ruff.applyOrganizeImports',
-                arguments = {
-                  { uri = vim.uri_from_bufnr(0) },
-                },
-              }
+              local bufnr = vim.api.nvim_get_current_buf()
+              local uri = vim.uri_from_bufnr(bufnr)
+              for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+                if client.name == 'ruff' then
+                  client:exec_cmd {
+                    title = 'Organize Imports',
+                    command = 'ruff.applyOrganizeImports',
+                    arguments = { { uri = uri } },
+                  }
+                end
+              end
             end,
             description = 'Ruff: Format imports',
           },
