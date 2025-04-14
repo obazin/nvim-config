@@ -32,6 +32,7 @@ require('lazy').setup {
   require 'plugins.ui-modules.telescope',
   require 'plugins.display.dimming',
   require 'plugins.ui-modules.zen',
+  require 'plugins.ui-modules.yazi',
   -- require 'plugins.display.transparent',
   require 'plugins.ui-modules.aerial',
   require 'plugins.display.folding',

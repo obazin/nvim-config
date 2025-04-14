@@ -11,7 +11,6 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>f', ':Neotree toggle float<CR>', silent = true, desc = 'Float File Explorer' },
     { '<leader>lf', ':Neotree toggle position=left<CR>', silent = true, desc = 'Left File Explorer' },
     { '<leader>ngs', ':Neotree float git_status<CR>', silent = true, desc = 'Neotree Open Git Status Window' },
   },
