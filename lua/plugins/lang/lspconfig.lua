@@ -259,7 +259,7 @@ return { -- LSP Configuration & Plugins
               callSnippet = 'Replace',
             },
             -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
+            diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
           },
         },
       },
@@ -269,7 +269,7 @@ return { -- LSP Configuration & Plugins
         root_dir = util.root_pattern 'pyproject.toml', -- Ensures correct project root detection
         cmd_env = {
           VIRTUAL_ENV = get_python_env(vim.fn.getcwd()),
-          PATH = vim.fn.getcwd() .. '/.venv/bin:' .. vim.env.PATH,
+          PATH = vim.fn.getcwd() .. '/.venv/bin/' .. vim.env.PATH,
         },
         settings = {
           pylsp = {
@@ -359,13 +359,6 @@ return { -- LSP Configuration & Plugins
             end,
           })
         end,
-      },
-      volar = {
-        init_options = {
-          vue = {
-            hybridMode = true,
-          },
-        },
       },
       vtsls = {},
       tailwindcss = {
