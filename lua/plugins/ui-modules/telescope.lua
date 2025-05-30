@@ -54,11 +54,33 @@ return { -- Fuzzy Finder (files, lsp, etc)
       -- You can put your default mappings / updates / etc. in here
       --  All the info you're looking for is in `:help telescope.setup()`
       --
-      -- defaults = {
-      --   mappings = {
-      --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-      --   },
-      -- },
+      defaults = {
+        vimgrep_arguments = {
+          'rg',
+          '--color=never',
+          '--no-heading',
+          '--with-filename',
+          '--line-number',
+          '--column',
+          '--smart-case',
+          '--hidden', -- include hidden files
+          '--glob',
+          '!.git/',
+          '--glob',
+          '!.venv/',
+          '--glob',
+          '!.env/',
+          '--glob',
+          '!env/',
+          '--glob',
+          '!*cache/',
+          '--glob',
+          '!node_modules/',
+          '--glob',
+          '!target/',
+        },
+        -- optional: previewer mappings, layout config, etc.
+      },
       -- pickers = {}
       extensions = {
         ['ui-select'] = {
