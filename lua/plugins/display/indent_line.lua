@@ -6,7 +6,7 @@ return {
     main = 'ibl',
     opts = {
       exclude = {
-        filetypes = { 'markdown', 'md' },
+        filetypes = { 'markdown', 'md', 'dashboard' },
       },
       debounce = 200,
       indent = {

@@ -259,30 +259,41 @@ return { -- LSP Configuration & Plugins
               callSnippet = 'Replace',
             },
             -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
+            diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
           },
         },
       },
       dockerls = {},
       docker_compose_language_service = {},
-      pylsp = {
-        root_dir = util.root_pattern 'pyproject.toml', -- Ensures correct project root detection
-        cmd_env = {
-          VIRTUAL_ENV = get_python_env(vim.fn.getcwd()),
-          PATH = vim.fn.getcwd() .. '/.venv/bin:' .. vim.env.PATH,
-        },
+      pyright = {
         settings = {
-          pylsp = {
-            plugins = {
-              pyflakes = { enabled = false },
-              pycodestyle = { enabled = false },
-              autopep8 = { enabled = false },
-              yapf = { enabled = false },
-              mccabe = { enabled = false },
-              pylsp_mypy = { enabled = false },
-              pylsp_black = { enabled = false },
-              pylsp_isort = { enabled = false },
-              ruff = { enabled = true },
+          python = {
+            analysis = {
+              typeCheckingMode = 'strict',
+
+              diagnosticSeverityOverrides = {
+                -- Fix diagnostics level
+                reportUnknownParameterType = 'warning',
+                reportMissingParameterType = 'warning',
+                reportUnknownArgumentType = 'warning',
+                reportUnknownLambdaType = 'warning',
+                reportUnknownMemberType = 'warning',
+                reportUnusedFunction = 'warning',
+                reportUntypedFunctionDecorator = 'warning',
+                reportDeprecated = 'warning',
+
+                -- Enable extra diagnostics
+                reportUnusedCallResult = 'warning',
+                reportUninitializedInstanceVariable = 'warning',
+
+                -- Gradual typing in new projects
+                reportMissingImports = false,
+                reportMissingTypeStubs = false,
+                reportUnknownVariableType = false,
+
+                -- Covered by ruff
+                reportUnusedImport = false,
+              },
             },
           },
         },
@@ -359,13 +370,6 @@ return { -- LSP Configuration & Plugins
             end,
           })
         end,
-      },
-      volar = {
-        init_options = {
-          vue = {
-            hybridMode = true,
-          },
-        },
       },
       vtsls = {},
       tailwindcss = {

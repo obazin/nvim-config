@@ -10,3 +10,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if bufname == '' or vim.fn.isdirectory(bufname) == 1 then
+      vim.schedule(function()
+        vim.cmd 'Dashboard'
+      end)
+    end
+  end,
+})

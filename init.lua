@@ -26,7 +26,9 @@ require('lazy').setup {
   -- Below are plugins to install first in order to  do not break anything
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   require 'plugins.navigation.vim_tmux',
+  require 'plugins.ui-modules.dashboard',
   require 'plugins.display.git',
+  require 'plugins.ui-modules.lazygit',
   require 'plugins.ui-modules.noice',
   require 'plugins.ui-modules.which-key',
   require 'plugins.ui-modules.telescope',

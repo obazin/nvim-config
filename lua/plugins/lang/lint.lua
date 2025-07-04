@@ -5,12 +5,10 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
-      local mypy = require 'lint.linters.mypy'
       -- Append the extra argument
-      table.insert(mypy.args, '--ignore-missing-imports')
       lint.linters_by_ft = {
         -- markdown = { 'markdownlint' },
-        python = { 'mypy' },
+        python = { 'ruff' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -48,10 +46,13 @@ return {
       -- Create autocommand which carries out the actual linting
       -- on the specified events.
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+      -- vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+      vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         group = lint_augroup,
         callback = function()
-          lint.try_lint()
+          if vim.bo.modifiable then
+            lint.try_lint()
+          end
         end,
       })
     end,
