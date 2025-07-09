@@ -54,6 +54,7 @@ require('lazy').setup {
   -- require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',
   require 'plugins.themes.nordic',
+  require 'plugins.themes.kanso',
   -- TODO comments management
   require 'plugins.display.todo-comments',
   require 'plugins.ui-modules.mini',
