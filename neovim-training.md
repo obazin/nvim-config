@@ -1,6 +1,6 @@
 ## Getting Started With Neovim: A Training Plan for Beginners
 
-Neovim (and Vim) is unique—mastering it changes the way you work. Here’s a simple step-by-step training plan to build strong foundations and avoid common frustrations:
+Neovim (and Vim) is unique: mastering it changes the way you work. Here’s a simple step-by-step training plan to build strong foundations and avoid common frustrations:
 
 ### 1. Learn With `vimtutor`
 
