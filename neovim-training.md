@@ -57,6 +57,7 @@ Neovim (and Vim) is unique—mastering it changes the way you work. Here’s a s
   - Verb + Motion/Delimiter + Object (e.g., `ciw` = Change Inside Word, `di(` = Delete Inside Parentheses)
   - Learn a few: `ciw`, `viw`, `di{`, `caw`, etc.
 - **Visualize every edit as a *sentence* using this grammar.**
+On this topic, [this video](https://youtu.be/wlR5gYd6um0?si=ykZskEEIJImJ7sT8) is a true gem 
 
 ### 8. Enhance With Treesitter & Text Objects
 
@@ -79,10 +80,11 @@ Neovim (and Vim) is unique—mastering it changes the way you work. Here’s a s
 
 Vim/Neovim rewards foundational skills. IDE features feel “magical” only if you’re comfortable moving and editing with precision!
 
----
-
-**See my [Resource Links](#) for further reading and video tutorials.  
-Happy hacking!**
-
----
+### Videos that could help you 
+- [Vim Motions for absolute beginners!!!](https://www.youtube.com/watch?v=lWTzqPfy1gE)
+- [30 Vim commands you NEED TO KNOW (in just 10 minutes)](https://youtu.be/wlR5gYd6um0?si=ykZskEEIJImJ7sT8)
+- [Vim Tips I Wish I Knew Earlier](https://www.youtube.com/watch?v=5BU2gBOe9RU)
+- [Vim Motions Strategy Guide](https://www.youtube.com/watch?v=ibNvyTD4Icg)
+- [Intermediate Vim Motions and Pro Tips!!!](https://www.youtube.com/watch?v=nBjEzQlJLHE)
+- [Vim Motions & Tricks I Wish I Learned Sooner](https://www.youtube.com/watch?v=RdyfT2dbt78)
 
