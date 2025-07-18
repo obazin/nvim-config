@@ -59,12 +59,12 @@ git clone https://github.com/yourusername/your-nvim-config.git ~/.config/nvim
 
 Open Neovim – plugins will auto-install via [lazy.nvim](https://github.com/folke/lazy.nvim).
 
----
+
 ### Beginners guide
 
 This repo features a [beginners friendly guide](./neovim-training.md) to help you in your neovim journey. Its purpose is to suggest a kind of
 training plan to build strong habits that will help you to feel free and fluent.
----
+
 
 ## Plugins Overview
 
