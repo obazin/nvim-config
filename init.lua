@@ -51,7 +51,7 @@ require('lazy').setup {
   -- Debug support
   require 'plugins.lang.debug',
   -- Theme
-  -- require 'plugins.themes.tokyonight',
+  require 'plugins.themes.tokyonight',
   require 'plugins.themes.catpuccin',
   require 'plugins.themes.nordic',
   require 'plugins.themes.kanso',
