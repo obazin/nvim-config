@@ -1,5 +1,11 @@
---  See `:help vim.keymap.set()`
+local vim = vim
+local opts = { noremap = true, silent = true }
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+-- Move selected line / block of text in visual mode
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", opts)
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", opts)
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -35,11 +41,22 @@ vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split buffer vertically' }
 vim.keymap.set('n', '<leader>wh', '<C-w>s', { desc = 'Split buffer horizontally' })
 
 -- use jk to exit insert mode
-vim.keymap.set('i', 'jk', '<ESC>', { desc = 'Exit insert mode with jk' })
+vim.keymap.set('i', 'jk', '<ESC>:w<CR>', opts)
+vim.keymap.set('i', 'jj', '<ESC>:w<CR>', opts)
 
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x')
+-- paste over currently selected text without yanking it
+vim.keymap.set('v', 'p', '"_dp')
+vim.keymap.set('v', 'P', '"_dP')
+
+-- paste on new line
+vim.keymap.set('n', '<C-p>', ':put<CR>')
 
 -- buffer navigation
-vim.keymap.set('n', '<M-n>', ':bnext<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<M-p>', ':bprevious<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<Right>', ':bnext<CR>', opts)
+vim.keymap.set('n', '<Left>', ':bprevious<CR>', opts)
+
+-- Map enter to ciw in normal mode
+vim.keymap.set('n', '<CR>', 'ciw', opts)
+vim.keymap.set('n', '<BS>', 'ci', opts)
