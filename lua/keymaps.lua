@@ -1,4 +1,3 @@
-local vim = vim
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')

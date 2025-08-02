@@ -249,20 +249,6 @@ return { -- LSP Configuration & Plugins
       --
       -- But for many setups, the LSP (`tsserver`) will work just fine
       -- tsserver = {},
-      lua_ls = {
-        -- cmd = {...},
-        -- filetypes = { ...},
-        -- capabilities = {},
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = 'Replace',
-            },
-            -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
-          },
-        },
-      },
       dockerls = {},
       docker_compose_language_service = {},
       pyright = {
@@ -442,5 +428,18 @@ return { -- LSP Configuration & Plugins
         end,
       },
     }
+    vim.lsp.config('lua_ls', {
+      settings = {
+        Lua = {
+          -- make the language server recognize "vim" global
+          diagnostics = {
+            globals = { 'vim' },
+          },
+          completion = {
+            callSnippet = 'Replace',
+          },
+        },
+      },
+    })
   end,
 }
