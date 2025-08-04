@@ -55,6 +55,7 @@ require('lazy').setup {
   require 'plugins.editing.comment',
   require 'plugins.navigation.neo-tree',
   require 'plugins.editing.neoclip',
+  require 'plugins.navigation.flash',
   -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
 
