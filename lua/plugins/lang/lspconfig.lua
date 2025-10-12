@@ -134,16 +134,16 @@ return { -- LSP Configuration & Plugins
 
     -- Needed to detect root for monorepo exposing several not correlated projects with uv
     -- TODO:Remove these two stuffs or use them
-    local util = require 'lspconfig.util'
+    -- local util = require 'lspconfig.util'
 
     -- Auto-detect venv
-    local function get_python_env(workspace)
-      local venv_path = workspace .. '/.venv'
-      if vim.fn.isdirectory(venv_path) == 1 then
-        return venv_path
-      end
-      return nil -- No virtual environment found
-    end
+    -- local function get_python_env(workspace)
+    --   local venv_path = workspace .. '/.venv'
+    --   if vim.fn.isdirectory(venv_path) == 1 then
+    --     return venv_path
+    --   end
+    --   return nil -- No virtual environment found
+    -- end
 
     local servers = {
       -- clangd = {},

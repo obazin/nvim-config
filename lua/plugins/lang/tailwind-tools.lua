@@ -1,5 +1,5 @@
 return {
-  'luckasRanarison/tailwind-tools.nvim',
+  'obazin/tailwind-tools.nvim',
   name = 'tailwind-tools',
   build = ':UpdateRemotePlugins',
   dependencies = {
