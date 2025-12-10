@@ -22,7 +22,7 @@ return {
     workspaces = {
       {
         name = 'personal',
-        path = '~/notes/personal-vault',
+        path = '~/notes',
       },
     },
     templates = {
