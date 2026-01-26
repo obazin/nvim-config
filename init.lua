@@ -14,6 +14,7 @@ require('lazy').setup {
   require 'plugins.ui-modules.dashboard',
   require 'plugins.display.git',
   require 'plugins.ui-modules.lazygit',
+  require 'plugins.ui-modules.blame',
   require 'plugins.ui-modules.noice',
   require 'plugins.ui-modules.which-key',
   require 'plugins.ui-modules.telescope',
