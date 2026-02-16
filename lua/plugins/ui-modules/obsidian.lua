@@ -22,7 +22,7 @@ return {
     workspaces = {
       {
         name = 'personal',
-        path = '~/notes',
+        path = vim.env.MAIN_OBSIDIAN_VAULT or '~/notes',
       },
     },
     templates = {
