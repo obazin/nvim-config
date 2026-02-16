@@ -8,7 +8,8 @@ return {
       -- Append the extra argument
       lint.linters_by_ft = {
         -- markdown = { 'markdownlint' },
-        python = { 'ruff' },
+        -- python linting is handled by ruff LSP server directly
+
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

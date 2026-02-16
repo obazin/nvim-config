@@ -132,18 +132,26 @@ return { -- LSP Configuration & Plugins
     --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    -- Needed to detect root for monorepo exposing several not correlated projects with uv
-    -- TODO:Remove these two stuffs or use them
-    -- local util = require 'lspconfig.util'
+    -- Resolve the Python interpreter for a workspace, checking (in order):
+    -- 1. Already-activated venv (VIRTUAL_ENV env var)
+    -- 2. .venv, venv, .env, env directories in workspace root
+    -- 3. System python3 fallback
+    local function get_python_path(workspace)
+      local venv = os.getenv 'VIRTUAL_ENV'
+      if venv then
+        return venv .. '/bin/python'
+      end
 
-    -- Auto-detect venv
-    -- local function get_python_env(workspace)
-    --   local venv_path = workspace .. '/.venv'
-    --   if vim.fn.isdirectory(venv_path) == 1 then
-    --     return venv_path
-    --   end
-    --   return nil -- No virtual environment found
-    -- end
+      local candidates = { '/.venv/bin/python', '/venv/bin/python', '/.env/bin/python', '/env/bin/python' }
+      for _, candidate in ipairs(candidates) do
+        local path = workspace .. candidate
+        if vim.fn.executable(path) == 1 then
+          return path
+        end
+      end
+
+      return vim.fn.exepath 'python3' or 'python'
+    end
 
     local servers = {
       -- clangd = {},
@@ -233,100 +241,6 @@ return { -- LSP Configuration & Plugins
       filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
     })
 
-    vim.lsp.config('pyright', {
-      settings = {
-        python = {
-          analysis = {
-            typeCheckingMode = 'strict',
-
-            diagnosticSeverityOverrides = {
-              -- Fix diagnostics level
-              reportUnknownParameterType = 'warning',
-              reportMissingParameterType = 'warning',
-              reportUnknownArgumentType = 'warning',
-              reportUnknownLambdaType = 'warning',
-              reportUnknownMemberType = 'warning',
-              reportUnusedFunction = 'warning',
-              reportUntypedFunctionDecorator = 'warning',
-              reportDeprecated = 'warning',
-
-              -- Enable extra diagnostics
-              reportUnusedCallResult = 'warning',
-              reportUninitializedInstanceVariable = 'warning',
-
-              -- Gradual typing in new projects
-              reportMissingImports = false,
-              reportMissingTypeStubs = false,
-              reportUnknownVariableType = false,
-
-              -- Covered by ruff
-              reportUnusedImport = false,
-            },
-          },
-        },
-      },
-    })
-
-    vim.lsp.config('ruff', {
-      on_attach = function(client, bufnr)
-        vim.api.nvim_create_autocmd('BufWritePre', {
-          buffer = bufnr,
-          callback = function()
-            local uri = vim.uri_from_bufnr(bufnr)
-            local clients = vim.lsp.get_clients { bufnr = bufnr }
-            for _, lsp_client in ipairs(clients) do
-              if lsp_client.name == 'ruff' then
-                lsp_client:exec_cmd {
-                  title = 'Organize Imports',
-                  command = 'ruff.applyOrganizeImports',
-                  arguments = {
-                    {
-                      uri = uri,
-                      version = vim.lsp.util.buf_versions[bufnr] or 0,
-                    },
-                  },
-                }
-              end
-            end
-          end,
-        })
-      end,
-      commands = {
-        RuffAutofix = {
-          function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            local uri = vim.uri_from_bufnr(bufnr)
-            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
-              if client.name == 'ruff' then
-                client:exec_cmd {
-                  title = 'Apply Auto Fix',
-                  command = 'ruff.applyAutofix',
-                  arguments = { { uri = uri } },
-                }
-              end
-            end
-          end,
-          description = 'Ruff: Fix all auto-fixable problems',
-        },
-        RuffOrganizeImports = {
-          function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            local uri = vim.uri_from_bufnr(bufnr)
-            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
-              if client.name == 'ruff' then
-                client:exec_cmd {
-                  title = 'Organize Imports',
-                  command = 'ruff.applyOrganizeImports',
-                  arguments = { { uri = uri } },
-                }
-              end
-            end
-          end,
-          description = 'Ruff: Format imports',
-        },
-      },
-    })
-
     vim.lsp.config('svelte', { -- configure svelte server
       on_attach = function(client, bufnr)
         vim.api.nvim_create_autocmd('BufWritePost', {
@@ -362,6 +276,83 @@ return { -- LSP Configuration & Plugins
               'tw\\(([^)]*)\\)', -- tw(...)
             },
           },
+        },
+      },
+    })
+
+    vim.lsp.config('pyright', {
+      before_init = function(_, config)
+        config.settings.python.pythonPath = get_python_path(config.root_dir)
+      end,
+      settings = {
+        python = {
+          analysis = {
+            typeCheckingMode = 'strict',
+
+            diagnosticSeverityOverrides = {
+              -- Fix diagnostics level
+              reportUnknownParameterType = 'warning',
+              reportMissingParameterType = 'warning',
+              reportUnknownArgumentType = 'warning',
+              reportUnknownLambdaType = 'warning',
+              reportUnknownMemberType = 'warning',
+              reportUnusedFunction = 'warning',
+              reportUntypedFunctionDecorator = 'warning',
+              reportDeprecated = 'warning',
+
+              -- Enable extra diagnostics
+              reportUnusedCallResult = 'warning',
+              reportUninitializedInstanceVariable = 'warning',
+
+              -- Gradual typing in new projects
+              reportMissingTypeStubs = false,
+              reportUnknownVariableType = false,
+
+              -- Covered by ruff
+              reportUnusedImport = false,
+            },
+          },
+        },
+      },
+    })
+
+    vim.lsp.config('ruff', {
+      on_attach = function(client, bufnr)
+        -- Disable hover in favor of Pyright's richer hover
+        client.server_capabilities.hoverProvider = false
+      end,
+      commands = {
+        RuffAutofix = {
+          function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            local uri = vim.uri_from_bufnr(bufnr)
+            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+              if client.name == 'ruff' then
+                client:exec_cmd {
+                  title = 'Apply Auto Fix',
+                  command = 'ruff.applyAutofix',
+                  arguments = { { uri = uri } },
+                }
+              end
+            end
+          end,
+          description = 'Ruff: Fix all auto-fixable problems',
+        },
+        RuffOrganizeImports = {
+          function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            local uri = vim.uri_from_bufnr(bufnr)
+            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
+              if client.name == 'ruff' then
+                client:exec_cmd {
+                  title = 'Organize Imports',
+                  command = 'ruff.applyOrganizeImports',
+                  arguments = { { uri = uri } },
+                }
+              end
+            end
+          end,
+          description = 'Ruff: Format imports',
         },
       },
     })
