@@ -50,7 +50,7 @@ vim.keymap.set('i', 'jj', '<ESC>:w<CR>', opts)
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x')
 -- paste over currently selected text without yanking it
-vim.keymap.set('v', 'p', '"_dp')
+vim.keymap.set('v', 'p', '"_dP')
 vim.keymap.set('v', 'P', '"_dP')
 
 -- paste on new line

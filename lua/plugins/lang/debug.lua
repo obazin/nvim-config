@@ -47,7 +47,7 @@ return {
     vim.keymap.set('n', '<leader>dd', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
-    vim.keymap.set('n', '<Leader>dl', dapui.toggle, { desc = 'Debug: See last session result.' })
+    vim.keymap.set('n', '<Leader>du', dapui.toggle, { desc = 'Debug: Toggle UI' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
