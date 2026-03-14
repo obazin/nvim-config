@@ -3,6 +3,7 @@ return {
   dependencies = { 'folke/snacks.nvim' },
   config = true,
   opts = {
+    terminal_cmd = vim.env.CLAUDE_CODE_PATH or 'claude',
     terminal = {
       split_side            = 'right',
       split_width_percentage = 0.35,
