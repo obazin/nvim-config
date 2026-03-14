@@ -22,13 +22,10 @@ require('lazy').setup {
   require 'plugins.display.dimming',
   require 'plugins.ui-modules.zen',
   require 'plugins.ui-modules.yazi',
-  -- AI
-  require 'plugins.ai.avante',
-  -- require 'plugins.ai.chatgpt',
-  -- require 'plugins.ai.copilot-chat',
-  -- require 'plugins.display.transparent',
   require 'plugins.ui-modules.aerial',
   require 'plugins.display.folding',
+  -- AI
+  require 'plugins.ai.claudecode',
   -- Lang support
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
