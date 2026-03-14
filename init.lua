@@ -1,3 +1,4 @@
+require 'neovide'
 require 'options'
 require 'keymaps'
 require 'autocommands'
@@ -43,6 +44,7 @@ require('lazy').setup {
   require 'plugins.themes.kanso',
   -- TODO comments management
   require 'plugins.display.todo-comments',
+  require 'plugins.ui-modules.lualine',
   require 'plugins.ui-modules.mini',
   -- Tressitter support
   require 'plugins.lang.treesitter',
