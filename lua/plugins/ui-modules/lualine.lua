@@ -27,7 +27,7 @@ return {
 
     require('lualine').setup {
       options = {
-        theme                = 'catppuccin-mocha',
+        theme                = 'auto',
         globalstatus         = false, -- one statusline per window
         component_separators = '',
         section_separators   = '',
