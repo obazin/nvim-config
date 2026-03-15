@@ -5,6 +5,15 @@ return {
   priority = 1001,
   dependencies = { { 'nvim-tree/nvim-web-devicons' } },
   config = function()
+    -- If nvim was opened with a directory arg, we're already in a project
+    local opened_in_dir = false
+    if vim.fn.argc() > 0 then
+      local arg = vim.fn.argv(0)
+      if vim.fn.isdirectory(arg) == 1 then
+        opened_in_dir = true
+      end
+    end
+
     require('dashboard').setup {
       theme = 'hyper',
       packages = { enable = false },
@@ -20,7 +29,7 @@ return {
             key = 'u',
           },
           {
-            icon = ' ',
+            icon = ' ',
             icon_hl = '@variable',
             desc = 'Find File',
             group = 'Label',
@@ -28,32 +37,26 @@ return {
             key = 'f',
           },
           {
-            desc = ' Grep',
+            desc = ' Grep',
             group = 'DiagnosticHint',
             action = 'Telescope live_grep',
             key = 'g',
           },
         },
-        -- Show only recent files in current working directory
         mru = {
           enable = true,
           limit = 12,
-          icon = ' ',
-          label = 'Recent Files in Workspace',
-          cwd_only = true,
+          icon = ' ',
+          label = opened_in_dir and 'Recent Files in Workspace' or 'Recent Files',
+          cwd_only = opened_in_dir,
         },
-        -- Optional: show projects if you use project.nvim
-        -- project = {
-        --   enable = true,
-        --   limit = 8,
-        --   icon = ' ',
-        --   label = ' Projects ',
-        --   action = 'Telescope find_files cwd=',
-        -- },
-        -- footer = {
-        --   '',
-        --   '📂 Recent files in this workspace only!',
-        -- },
+        project = {
+          enable = not opened_in_dir,
+          limit = 5,
+          icon = ' ',
+          label = ' Projects ',
+          action = 'Telescope find_files cwd=',
+        },
       },
     }
   end,
