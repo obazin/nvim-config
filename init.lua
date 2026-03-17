@@ -40,6 +40,7 @@ require('lazy').setup {
   require 'plugins.themes.nordic',
   require 'plugins.themes.nord',
   require 'plugins.themes.kanso',
+  require 'plugins.themes.material',
   -- TODO comments management
   require 'plugins.display.todo-comments',
   require 'plugins.ui-modules.lualine',
