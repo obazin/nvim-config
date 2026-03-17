@@ -280,7 +280,7 @@ return { -- LSP Configuration & Plugins
 
     vim.lsp.config('pyright', {
       before_init = function(_, config)
-        config.settings.python.pythonPath = get_python_path(config.root_dir)
+        config.settings.python.pythonPath = get_python_path(config.root_dir or vim.fn.getcwd())
       end,
       settings = {
         python = {
