@@ -57,6 +57,7 @@ require('lazy').setup {
   require 'plugins.navigation.neo-tree',
   require 'plugins.editing.neoclip',
   require 'plugins.navigation.flash',
+  vim.g.neovide and require 'plugins.ui-modules.toggleterm' or nil,
   -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
 
