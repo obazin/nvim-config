@@ -55,9 +55,23 @@ return { -- LSP Configuration & Plugins
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+        -- Server-specific overrides
+        if client and client.name == 'ruff' then
+          client.server_capabilities.hoverProvider = false
+        end
+        if client and client.name == 'svelte' then
+          vim.api.nvim_create_autocmd('BufWritePost', {
+            pattern = { '*.js', '*.ts' },
+            callback = function(ctx)
+              client:notify('$/onDidChangeTsOrJsFile', { uri = ctx.match })
+            end,
+          })
+        end
+
         if
           client
-          and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, { bufnr = event.buf })
+          and client:supports_method('textDocument/documentHighlight', { bufnr = event.buf })
         then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -86,7 +100,7 @@ return { -- LSP Configuration & Plugins
         --
         -- This may be unwanted, since they displace some of your code
         if
-          client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, { bufnr = event.buf })
+          client and client:supports_method('textDocument/inlayHint', { bufnr = event.buf })
         then
           map('<leader>th', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
@@ -99,7 +113,7 @@ return { -- LSP Configuration & Plugins
     -- See :help vim.diagnostic.Opts
     vim.diagnostic.config {
       severity_sort = true,
-      float = { border = 'rounded', source = 'if_many' },
+      float = { source = 'if_many' },
       underline = { severity = vim.diagnostic.severity.ERROR },
       signs = vim.g.have_nerd_font and {
         text = {
@@ -181,10 +195,6 @@ return { -- LSP Configuration & Plugins
     require('mason-lspconfig').setup {
       handlers = {
         function(server_name)
-          -- temp hack needed before Mason updates
-          if server_name == 'tsserver' then
-            server_name = 'ts_ls'
-          end
           local server = servers[server_name] or {}
           -- This handles overriding only values explicitly passed
           -- by the server configuration above. Useful when disabling
@@ -237,18 +247,6 @@ return { -- LSP Configuration & Plugins
 
     vim.lsp.config('emmet_ls', {
       filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
-    })
-
-    vim.lsp.config('svelte', { -- configure svelte server
-      on_attach = function(client, bufnr)
-        vim.api.nvim_create_autocmd('BufWritePost', {
-          pattern = { '*.js', '*.ts' },
-          callback = function(ctx)
-            -- Here use ctx.match instead of ctx.file
-            client.notify('$/onDidChangeTsOrJsFile', { uri = ctx.match })
-          end,
-        })
-      end,
     })
 
     vim.lsp.config('tailwindcss', { -- exclude a filetype from the default_config
@@ -315,10 +313,6 @@ return { -- LSP Configuration & Plugins
     })
 
     vim.lsp.config('ruff', {
-      on_attach = function(client, bufnr)
-        -- Disable hover in favor of Pyright's richer hover
-        client.server_capabilities.hoverProvider = false
-      end,
       commands = {
         RuffAutofix = {
           function()

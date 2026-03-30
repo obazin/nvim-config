@@ -40,3 +40,6 @@ vim.opt.laststatus = 3 -- Global status on
 vim.opt.hlsearch = true
 vim.opt.inccommand = 'split'
 vim.opt.showmode = false
+
+vim.opt.winborder = 'rounded'
+vim.opt.pumborder = 'rounded'
