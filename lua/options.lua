@@ -43,3 +43,6 @@ vim.opt.showmode = false
 
 vim.opt.winborder = 'rounded'
 vim.opt.pumborder = 'rounded'
+
+-- Use inline colored circle instead of background for LSP document colors
+vim.lsp.document_color.enable(true, nil, { style = '● ' })

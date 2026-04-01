@@ -30,7 +30,6 @@ require('lazy').setup {
   require 'plugins.lang.lspconfig',
   require 'plugins.lang.formatting',
   require 'plugins.lang.completion',
-  require 'plugins.lang.tailwind-tools',
   require 'plugins.lang.rustacean',
   -- Debug support
   require 'plugins.lang.debug',
