@@ -1,10 +1,11 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
+  branch = 'main',
   lazy = false,
   build = ':TSUpdate',
   dependencies = {
     { 'windwp/nvim-ts-autotag', opts = {} },
-    'nvim-treesitter/nvim-treesitter-textobjects',
+    { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
   },
   config = function()
     if not vim.fn.executable('tree-sitter') then
