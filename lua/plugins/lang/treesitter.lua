@@ -1,7 +1,7 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   branch = 'main',
-  lazy = false,
+  event = { 'BufReadPost', 'BufNewFile' },
   build = ':TSUpdate',
   dependencies = {
     { 'windwp/nvim-ts-autotag', opts = {} },
@@ -83,46 +83,44 @@ return { -- Highlight, edit, and navigate code
     sel('ic', '@class.inner', 'Select inner part of a class')
 
     -- Swap keymaps
-    local swap = require('nvim-treesitter-textobjects.swap')
-    vim.keymap.set('n', '<leader>sa', function() swap.swap_next('@parameter.inner') end, { desc = 'Swap next parameter' })
-    vim.keymap.set('n', '<leader>s:', function() swap.swap_next('@property.outer') end, { desc = 'Swap next property' })
-    vim.keymap.set('n', '<leader>sm', function() swap.swap_next('@function.outer') end, { desc = 'Swap next function' })
-    vim.keymap.set('n', '<leader>sA', function() swap.swap_previous('@parameter.inner') end, { desc = 'Swap prev parameter' })
-    vim.keymap.set('n', '<leader>s;', function() swap.swap_previous('@property.outer') end, { desc = 'Swap prev property' })
-    vim.keymap.set('n', '<leader>sM', function() swap.swap_previous('@function.outer') end, { desc = 'Swap prev function' })
+    vim.keymap.set('n', '<leader>sa', function() require('nvim-treesitter-textobjects.swap').swap_next('@parameter.inner') end, { desc = 'Swap next parameter' })
+    vim.keymap.set('n', '<leader>s:', function() require('nvim-treesitter-textobjects.swap').swap_next('@property.outer') end, { desc = 'Swap next property' })
+    vim.keymap.set('n', '<leader>sm', function() require('nvim-treesitter-textobjects.swap').swap_next('@function.outer') end, { desc = 'Swap next function' })
+    vim.keymap.set('n', '<leader>sA', function() require('nvim-treesitter-textobjects.swap').swap_previous('@parameter.inner') end, { desc = 'Swap prev parameter' })
+    vim.keymap.set('n', '<leader>s;', function() require('nvim-treesitter-textobjects.swap').swap_previous('@property.outer') end, { desc = 'Swap prev property' })
+    vim.keymap.set('n', '<leader>sM', function() require('nvim-treesitter-textobjects.swap').swap_previous('@function.outer') end, { desc = 'Swap prev function' })
 
     -- Move keymaps
-    local move = require('nvim-treesitter-textobjects.move')
     local move_modes = { 'n', 'x', 'o' }
 
     -- goto_next_start
-    vim.keymap.set(move_modes, ']f', function() move.goto_next_start('@call.outer', 'textobjects') end, { desc = 'Next function call start' })
-    vim.keymap.set(move_modes, ']m', function() move.goto_next_start('@function.outer', 'textobjects') end, { desc = 'Next method/function def start' })
-    vim.keymap.set(move_modes, ']c', function() move.goto_next_start('@class.outer', 'textobjects') end, { desc = 'Next class start' })
-    vim.keymap.set(move_modes, ']i', function() move.goto_next_start('@conditional.outer', 'textobjects') end, { desc = 'Next conditional start' })
-    vim.keymap.set(move_modes, ']l', function() move.goto_next_start('@loop.outer', 'textobjects') end, { desc = 'Next loop start' })
-    vim.keymap.set(move_modes, ']s', function() move.goto_next_start('@local.scope', 'locals') end, { desc = 'Next scope' })
-    vim.keymap.set(move_modes, ']z', function() move.goto_next_start('@fold', 'folds') end, { desc = 'Next fold' })
+    vim.keymap.set(move_modes, ']f', function() require('nvim-treesitter-textobjects.move').goto_next_start('@call.outer', 'textobjects') end, { desc = 'Next function call start' })
+    vim.keymap.set(move_modes, ']m', function() require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects') end, { desc = 'Next method/function def start' })
+    vim.keymap.set(move_modes, ']c', function() require('nvim-treesitter-textobjects.move').goto_next_start('@class.outer', 'textobjects') end, { desc = 'Next class start' })
+    vim.keymap.set(move_modes, ']i', function() require('nvim-treesitter-textobjects.move').goto_next_start('@conditional.outer', 'textobjects') end, { desc = 'Next conditional start' })
+    vim.keymap.set(move_modes, ']l', function() require('nvim-treesitter-textobjects.move').goto_next_start('@loop.outer', 'textobjects') end, { desc = 'Next loop start' })
+    vim.keymap.set(move_modes, ']s', function() require('nvim-treesitter-textobjects.move').goto_next_start('@local.scope', 'locals') end, { desc = 'Next scope' })
+    vim.keymap.set(move_modes, ']z', function() require('nvim-treesitter-textobjects.move').goto_next_start('@fold', 'folds') end, { desc = 'Next fold' })
 
     -- goto_next_end
-    vim.keymap.set(move_modes, ']F', function() move.goto_next_end('@call.outer', 'textobjects') end, { desc = 'Next function call end' })
-    vim.keymap.set(move_modes, ']M', function() move.goto_next_end('@function.outer', 'textobjects') end, { desc = 'Next method/function def end' })
-    vim.keymap.set(move_modes, ']C', function() move.goto_next_end('@class.outer', 'textobjects') end, { desc = 'Next class end' })
-    vim.keymap.set(move_modes, ']I', function() move.goto_next_end('@conditional.outer', 'textobjects') end, { desc = 'Next conditional end' })
-    vim.keymap.set(move_modes, ']L', function() move.goto_next_end('@loop.outer', 'textobjects') end, { desc = 'Next loop end' })
+    vim.keymap.set(move_modes, ']F', function() require('nvim-treesitter-textobjects.move').goto_next_end('@call.outer', 'textobjects') end, { desc = 'Next function call end' })
+    vim.keymap.set(move_modes, ']M', function() require('nvim-treesitter-textobjects.move').goto_next_end('@function.outer', 'textobjects') end, { desc = 'Next method/function def end' })
+    vim.keymap.set(move_modes, ']C', function() require('nvim-treesitter-textobjects.move').goto_next_end('@class.outer', 'textobjects') end, { desc = 'Next class end' })
+    vim.keymap.set(move_modes, ']I', function() require('nvim-treesitter-textobjects.move').goto_next_end('@conditional.outer', 'textobjects') end, { desc = 'Next conditional end' })
+    vim.keymap.set(move_modes, ']L', function() require('nvim-treesitter-textobjects.move').goto_next_end('@loop.outer', 'textobjects') end, { desc = 'Next loop end' })
 
     -- goto_previous_start
-    vim.keymap.set(move_modes, '[f', function() move.goto_previous_start('@call.outer', 'textobjects') end, { desc = 'Prev function call start' })
-    vim.keymap.set(move_modes, '[m', function() move.goto_previous_start('@function.outer', 'textobjects') end, { desc = 'Prev method/function def start' })
-    vim.keymap.set(move_modes, '[c', function() move.goto_previous_start('@class.outer', 'textobjects') end, { desc = 'Prev class start' })
-    vim.keymap.set(move_modes, '[i', function() move.goto_previous_start('@conditional.outer', 'textobjects') end, { desc = 'Prev conditional start' })
-    vim.keymap.set(move_modes, '[l', function() move.goto_previous_start('@loop.outer', 'textobjects') end, { desc = 'Prev loop start' })
+    vim.keymap.set(move_modes, '[f', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@call.outer', 'textobjects') end, { desc = 'Prev function call start' })
+    vim.keymap.set(move_modes, '[m', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects') end, { desc = 'Prev method/function def start' })
+    vim.keymap.set(move_modes, '[c', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@class.outer', 'textobjects') end, { desc = 'Prev class start' })
+    vim.keymap.set(move_modes, '[i', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@conditional.outer', 'textobjects') end, { desc = 'Prev conditional start' })
+    vim.keymap.set(move_modes, '[l', function() require('nvim-treesitter-textobjects.move').goto_previous_start('@loop.outer', 'textobjects') end, { desc = 'Prev loop start' })
 
     -- goto_previous_end
-    vim.keymap.set(move_modes, '[F', function() move.goto_previous_end('@call.outer', 'textobjects') end, { desc = 'Prev function call end' })
-    vim.keymap.set(move_modes, '[M', function() move.goto_previous_end('@function.outer', 'textobjects') end, { desc = 'Prev method/function def end' })
-    vim.keymap.set(move_modes, '[C', function() move.goto_previous_end('@class.outer', 'textobjects') end, { desc = 'Prev class end' })
-    vim.keymap.set(move_modes, '[I', function() move.goto_previous_end('@conditional.outer', 'textobjects') end, { desc = 'Prev conditional end' })
-    vim.keymap.set(move_modes, '[L', function() move.goto_previous_end('@loop.outer', 'textobjects') end, { desc = 'Prev loop end' })
+    vim.keymap.set(move_modes, '[F', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@call.outer', 'textobjects') end, { desc = 'Prev function call end' })
+    vim.keymap.set(move_modes, '[M', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@function.outer', 'textobjects') end, { desc = 'Prev method/function def end' })
+    vim.keymap.set(move_modes, '[C', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@class.outer', 'textobjects') end, { desc = 'Prev class end' })
+    vim.keymap.set(move_modes, '[I', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@conditional.outer', 'textobjects') end, { desc = 'Prev conditional end' })
+    vim.keymap.set(move_modes, '[L', function() require('nvim-treesitter-textobjects.move').goto_previous_end('@loop.outer', 'textobjects') end, { desc = 'Prev loop end' })
   end,
 }
