@@ -52,7 +52,7 @@ return {
         },
         project = {
           enable = not opened_in_dir,
-          limit = 5,
+          limit = 9,
           icon = ' ',
           label = ' Projects ',
           action = 'Telescope find_files cwd=',
