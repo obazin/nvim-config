@@ -133,5 +133,10 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader>st', function()
       require('custom.telescope-notes-tags').pick()
     end, { desc = '[S]earch notes by [T]ag' })
+
+    -- Files in cwd sorted by last modified (most recent first)
+    vim.keymap.set('n', '<leader>sm', function()
+      require('custom.telescope-files-mtime').pick()
+    end, { desc = '[S]earch files by [M]odified date' })
   end,
 }
