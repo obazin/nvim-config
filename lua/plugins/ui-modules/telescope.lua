@@ -128,5 +128,10 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader>sn', function()
       builtin.find_files { cwd = vim.fn.stdpath 'config' }
     end, { desc = '[S]earch [N]eovim files' })
+
+    -- Search notes by frontmatter tag (only meaningful in a notes folder)
+    vim.keymap.set('n', '<leader>st', function()
+      require('custom.telescope-notes-tags').pick()
+    end, { desc = '[S]earch notes by [T]ag' })
   end,
 }
