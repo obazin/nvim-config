@@ -114,6 +114,6 @@ end
 -- Keymap
 -- ---------------------------------------------------------------------------
 
-vim.keymap.set('n', '<leader>st', M.pick, { desc = 'Theme switcher' })
+vim.keymap.set('n', '<leader>ut', M.pick, { desc = '[U]I [T]heme switcher' })
 
 return M
