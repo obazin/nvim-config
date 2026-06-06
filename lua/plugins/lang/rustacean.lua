@@ -3,20 +3,22 @@ return {
   version = '^9',
   lazy = false,
   config = function()
-    -- Get Mason root
-    local mason_path = vim.fn.expand '$MASON'
-    local package_path = mason_path .. '/packages/codelldb/extension/'
-    local codelldb_path = package_path .. 'adapter/codelldb'
+    -- Resolve codelldb from $PATH (provided per-project by `nix develop`).
+    -- If it isn't available, let rustaceanvim fall back to its own auto-detection
+    -- rather than forcing a broken adapter path.
+    local codelldb_path = vim.fn.exepath 'codelldb'
 
-    -- You'll need to adjust this for your OS if not macOS
-    local liblldb_path = package_path .. 'lldb/lib/liblldb.dylib'
+    if codelldb_path ~= '' then
+      -- liblldb usually sits alongside the nix-provided codelldb binary.
+      local lib_ext = vim.uv.os_uname().sysname == 'Darwin' and 'dylib' or 'so'
+      local liblldb_path = vim.fn.resolve(vim.fn.fnamemodify(codelldb_path, ':h') .. '/../lib/liblldb.' .. lib_ext)
 
-    local cfg = require 'rustaceanvim.config'
-
-    vim.g.rustaceanvim = {
-      dap = {
-        adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-      },
-    }
+      local cfg = require 'rustaceanvim.config'
+      vim.g.rustaceanvim = {
+        dap = {
+          adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
+        },
+      }
+    end
   end,
 }

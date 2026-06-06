@@ -1,10 +1,8 @@
 return { -- LSP Configuration & Plugins
   'neovim/nvim-lspconfig',
   dependencies = {
-    -- Automatically install LSPs and related tools to stdpath for Neovim
-    { 'mason-org/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-    'mason-org/mason-lspconfig.nvim',
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    -- Tools (LSPs, formatters, debug adapters) are provided per-project via
+    -- `nix develop` shells on $PATH, not by a centralized manager.
     'saghen/blink.cmp',
 
     -- Useful status updates for LSP.
@@ -143,6 +141,8 @@ return { -- LSP Configuration & Plugins
     --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
     --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    -- Broadcast blink.cmp capabilities to every server via the wildcard config.
+    vim.lsp.config('*', { capabilities = capabilities })
 
     -- Resolve the Python interpreter for a workspace, checking (in order):
     -- 1. Already-activated venv (VIRTUAL_ENV env var)
@@ -168,6 +168,7 @@ return { -- LSP Configuration & Plugins
     local servers = {
       -- clangd = {},
       -- gopls = {},
+      lua_ls = {},
       html = {},
       bashls = {},
       cssls = {},
@@ -182,28 +183,12 @@ return { -- LSP Configuration & Plugins
       tinymist = {},
     }
 
-    require('mason').setup()
+    -- Register base config for each server. Detailed per-server overrides
+    -- below merge on top via additional vim.lsp.config() calls.
+    for server_name, server in pairs(servers) do
+      vim.lsp.config(server_name, server)
+    end
 
-    local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Used to format Lua code
-      'shfmt',
-      'codelldb', -- DAP adapter for Rust and other languages
-    })
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-    require('mason-lspconfig').setup {
-      handlers = {
-        function(server_name)
-          local server = servers[server_name] or {}
-          -- This handles overriding only values explicitly passed
-          -- by the server configuration above. Useful when disabling
-          -- certain features of an LSP (for example, turning off formatting for tsserver)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-          require('lspconfig')[server_name].setup(server)
-        end,
-      },
-    }
     vim.lsp.config('lua_ls', {
       settings = {
         Lua = {
@@ -222,7 +207,7 @@ return { -- LSP Configuration & Plugins
       filetypes = { 'html', 'twig', 'hbs' },
     })
 
-    vim.lsp.config('css_ls', {
+    vim.lsp.config('cssls', {
       settings = {
         css = {
           validate = true,
@@ -356,5 +341,10 @@ return { -- LSP Configuration & Plugins
         semanticTokens = 'disable',
       },
     })
+
+    -- Enable every configured server. Each only attaches if its executable is
+    -- found on $PATH (provided per-project by `nix develop`); missing ones are
+    -- silently skipped.
+    vim.lsp.enable(vim.tbl_keys(servers))
   end,
 }
