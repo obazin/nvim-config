@@ -1,7 +1,10 @@
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   branch = 'main',
-  event = { 'BufReadPost', 'BufNewFile' },
+  -- The main branch explicitly does not support lazy-loading; load eagerly and
+  -- let `:TSUpdate` (run on install/update) keep parsers in sync with the
+  -- pinned plugin revision, per the upstream README.
+  lazy = false,
   build = ':TSUpdate',
   dependencies = {
     { 'windwp/nvim-ts-autotag', opts = {} },
