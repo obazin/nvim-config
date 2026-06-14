@@ -58,17 +58,34 @@ local function parse_frontmatter_tags(filepath)
     return tags
   end
 
-  -- Block form:
-  -- tags:
-  --   - a
-  --   - b
+  -- Scalar form: tags: foo   (single line, no brackets, no list)
+  -- Obsidian also accepts space/comma-separated scalars, e.g. tags: a b,c.
+  -- The `[^\n%[]` guard skips the inline `[...]` and the bare block `tags:` cases.
+  local scalar = fm:match 'tags:[ \t]+([^\n%[][^\n]*)'
+  if scalar then
+    scalar = vim.trim(scalar)
+    if scalar ~= '' then
+      for tag in scalar:gmatch '[^,%s]+' do
+        table.insert(tags, strip_quotes(tag))
+      end
+      if #tags > 0 then
+        return tags
+      end
+    end
+  end
+
+  -- Block form (items may be flush or indented — both are valid YAML and
+  -- Obsidian writes flush dashes):
+  -- tags:        tags:
+  -- - a            - a
+  -- - b            - b
   local in_tags = false
   for line in (fm .. '\n'):gmatch '([^\n]*)\n' do
     if in_tags then
-      local item = line:match '^%s+%-%s*(.+)%s*$'
+      local item = line:match '^%s*%-%s*(.+)%s*$'
       if item then
         table.insert(tags, strip_quotes(vim.trim(item)))
-      elseif line:match '^%S' or line == '' then
+      elseif line == '' or line:match '^%S' then
         in_tags = false
       end
     end
