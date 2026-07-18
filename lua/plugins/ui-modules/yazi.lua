@@ -1,6 +1,9 @@
 return {
   'mikavilpas/yazi.nvim',
   event = 'VeryLazy',
+  -- The `yazi-plugin/yazi-plugins` submodule is only used for the plugin's own
+  -- tests; skipping it avoids "could not reset submodule index" on update.
+  submodules = false,
   dependencies = {
     -- check the installation instructions at
     -- https://github.com/folke/snacks.nvim
