@@ -20,8 +20,8 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'WinEnter' }, {
 -- Longer timeout for key combinations (terminal uses 500ms)
 vim.opt.timeoutlen = 800
 
--- Cursor animation
-vim.g.neovide_cursor_animation_length = 0
+-- Cursor: keep Neovide's animated ("jumping") cursor with its default
+-- animation length (0.15s) and trail; not overridden on purpose.
 
 -- Padding (in pixels)
 vim.g.neovide_padding_top = 48
@@ -29,18 +29,20 @@ vim.g.neovide_padding_bottom = 4
 vim.g.neovide_padding_left = 64
 vim.g.neovide_padding_right = 64
 
--- Cmd+= / Cmd+- to resize font, Cmd+0 to reset
-local function adjust_font_size(delta)
-  local current = vim.o.guifont
-  local size = tonumber(current:match(':h(%d+)')) or 12
-  local new_size = math.max(8, math.min(32, size + delta))
-  vim.o.guifont = current:gsub(':h%d+', ':h' .. new_size)
+-- Cmd+= / Cmd+- to zoom, Cmd+0 to reset.
+-- Scale the whole UI rather than rewriting 'guifont': the font (family,
+-- weights, size) is owned by ~/.config/neovide/config.toml so it stays in
+-- sync with the terminal, and a guifont string cannot express the ExtraLight
+-- weight — touching it would silently swap the text back to Regular.
+local function zoom(factor)
+  local current = vim.g.neovide_scale_factor or 1.0
+  vim.g.neovide_scale_factor = math.max(0.5, math.min(3.0, current * factor))
 end
 
-vim.keymap.set('n', '<D-=>', function() adjust_font_size(1) end,
-  { noremap = true, silent = true, desc = 'Font size +' })
-vim.keymap.set('n', '<D-->', function() adjust_font_size(-1) end,
-  { noremap = true, silent = true, desc = 'Font size -' })
+vim.keymap.set('n', '<D-=>', function() zoom(1.1) end,
+  { noremap = true, silent = true, desc = 'Zoom in' })
+vim.keymap.set('n', '<D-->', function() zoom(1 / 1.1) end,
+  { noremap = true, silent = true, desc = 'Zoom out' })
 vim.keymap.set('n', '<D-0>', function()
-  vim.o.guifont = 'JetBrainsMono Nerd Font:h12'
-end, { noremap = true, silent = true, desc = 'Font size reset' })
+  vim.g.neovide_scale_factor = 1.0
+end, { noremap = true, silent = true, desc = 'Zoom reset' })
