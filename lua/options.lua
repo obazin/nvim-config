@@ -36,7 +36,8 @@ vim.opt.splitbelow = true
 
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.laststatus = 3 -- Global status on
+vim.opt.laststatus = 2 -- One statusline per window; lualine (globalstatus = false) forces this value anyway
+vim.opt.cmdheight = 0 -- No reserved command-line row under the statusline; noice draws the cmdline as a popup
 vim.opt.hlsearch = true
 vim.opt.inccommand = 'split'
 vim.opt.showmode = false

@@ -9,11 +9,12 @@ end
 -- Line height (pixels between lines, 0 = natural)
 vim.opt.linespace = 12
 
--- Restore statusline (dashboard-nvim sets laststatus=0)
+-- Restore statusline (dashboard-nvim sets laststatus=0).
+-- cmdheight is deliberately not touched here: options.lua sets it to 0 and
+-- forcing it back to 1 reserved an empty row under the statusline.
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'WinEnter' }, {
   callback = function()
     vim.opt.laststatus = 2
-    vim.opt.cmdheight = 1
   end,
 })
 
