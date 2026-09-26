@@ -11,7 +11,7 @@ require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   -- Below are plugins to install first in order to  do not break anything
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  require 'plugins.navigation.vim_tmux',
+  require 'plugins.navigation.vim_multiplexer',
   require 'plugins.ui-modules.dashboard',
   require 'plugins.display.git',
   require 'plugins.ui-modules.lazygit',
