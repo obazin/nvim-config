@@ -83,9 +83,10 @@ return {
         crust = '#181926',
       },
       -- Match Ghostty's background (~/.config/ghostty/config.local): the
-      -- editor background uses mantle instead of the theme's base (#1e1e2e).
+      -- editor background sits one third of the way from mantle (#181825) to
+      -- the theme's base (#1e1e2e), same 240° hue.
       mocha = {
-        base = '#181825',
+        base = '#1a1a28',
       },
     },
   },
