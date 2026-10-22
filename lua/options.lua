@@ -28,6 +28,33 @@ vim.opt.swapfile = false
 
 vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamedplus'
+-- Without a Wayland/X display no clipboard provider is found and '+' silently
+-- stays local. Two cases:
+--  * a multiplexer server (herdr, tmux) started from SSH hands its panes a
+--    stale env with no WAYLAND_DISPLAY, even when used at the desk: adopt the
+--    session's socket if one exists, so wl-copy reaches the desktop clipboard.
+--  * a real SSH login (SSH_TTY set): copy through OSC 52 so yanks reach the
+--    client's (e.g. the Mac's) clipboard via the terminal. Paste reads the
+--    unnamed register instead, to avoid blocking on the terminal's
+--    clipboard-read prompt.
+local runtime_dir = vim.env.XDG_RUNTIME_DIR
+if not vim.env.SSH_TTY and not vim.env.WAYLAND_DISPLAY and runtime_dir then
+  local socket = vim.fn.glob(runtime_dir .. '/wayland-[0-9]', false, true)[1]
+  if socket then
+    vim.env.WAYLAND_DISPLAY = vim.fn.fnamemodify(socket, ':t')
+  end
+end
+if vim.env.SSH_TTY then
+  local osc52 = require('vim.ui.clipboard.osc52')
+  local function paste()
+    return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
+  end
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = { ['+'] = osc52.copy('+'), ['*'] = osc52.copy('*') },
+    paste = { ['+'] = paste, ['*'] = paste },
+  }
+end
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 500
 
