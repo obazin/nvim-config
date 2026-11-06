@@ -17,6 +17,9 @@ This repo is basically just what i added to this starting point.
 
 ### 1. Install Neovim
 
+Neovim **0.12 or newer** is required. Check `nvim --version`; distribution
+packages may be older than the APIs used by this configuration.
+
 #### **macOS**
 
 ```sh
