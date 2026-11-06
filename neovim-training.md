@@ -64,7 +64,8 @@ On this topic, [this video](https://youtu.be/wlR5gYd6um0?si=ykZskEEIJImJ7sT8) is
 - **Treesitter:**  
   Enables smart text objects for code (e.g., functions, classes).
 - **Use enhanced motions:**  
-  - `af`/`if` (a function / inner function)
+  - `af`/`if` (a function call / inner function call)
+  - `am`/`im` (a function definition / its body)
   - `ac`/`ic` (a class / inner class)
   - Move and edit *semantic* units (not just lines or words).
 

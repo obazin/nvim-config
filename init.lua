@@ -7,13 +7,9 @@ require 'neovide'
 require 'keymaps'
 require 'autocommands'
 
--- [[ Install `lazy.nvim` plugin manager ]]
+-- Bootstrap the plugin manager, then load the explicit plugin manifest.
 require 'lazy-init'
---
--- NOTE: Here is where you install your plugins.
 require('lazy').setup {
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  -- Below are plugins to install first in order to  do not break anything
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   require 'plugins.navigation.vim_multiplexer',
   require 'plugins.ui-modules.dashboard',
@@ -48,7 +44,7 @@ require('lazy').setup {
   require 'plugins.display.todo-comments',
   require 'plugins.ui-modules.lualine',
   require 'plugins.ui-modules.mini',
-  -- Tressitter support
+  -- Tree-sitter support
   require 'plugins.lang.treesitter',
   require 'plugins.lang.markdown',
   require 'plugins.display.indent_line',

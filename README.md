@@ -1,177 +1,147 @@
-# Neovim Config – Kickstart-based, Modular, and Opinionated
+# Neovim configuration
 
-Welcome! This is my personal Neovim configuration, designed for clarity, readability, and modern Neovim development.\
-It started from the great [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) distribution, but files have been split for maintainability, and plugins have been carefully chosen to match my workflow. Over everything else, i choosed kickstart for its outstanding pedagogical approach : more than a ready-to-go config, kickstart is both a documentation on how to build your own one plus a reasonnable starting point. 
-This repo is basically just what i added to this starting point. 
+A personal, modular configuration derived from kickstart.nvim. It favors fuzzy
+search, structural editing, and project-provided tools. `init.lua` is the explicit
+plugin manifest; files under `lua/plugins/` are loaded only when imported there
+or declared as dependencies.
 
-## Approach
+## Requirements and installation
 
-- **Readable & Modular**: All settings and plugin configs are organized into small files, easy to understand and extend.
-- **Non-classic IDE**: By default, there is *no* file tree on the left (but it’s available if you want it). The idea is to promote navigation and fuzzy search as the main workflow. After all, neovim has its own capabilities, a full semantic approach with its motions and i like to idea to do not try to emulate most known IDEs user experience inside nvim, but this of course only personal choice.
-- **Minimal yet Powerful**: Includes everything for a full-featured code/notes workflow, but nothing more.
-- **Nerd Font Ready**: Make sure your terminal uses a Nerd Font for full symbol support.
+Neovim **0.12 or newer** is required. The audit checks were run with 0.12.6.
+Check `nvim --version` before using a distribution package.
 
----
+Install Git, ripgrep (`rg`), `make`, a C compiler, and `tree-sitter` for plugin and
+parser builds. A Nerd Font is expected. `fd` is optional. Yazi, LazyGit, and Claude
+Code need their respective executables when invoked.
 
-## Installation
-
-### 1. Install Neovim
-
-Neovim **0.12 or newer** is required. Check `nvim --version`; distribution
-packages may be older than the APIs used by this configuration.
-
-#### **macOS**
-
-```sh
-brew install neovim
-```
-
-#### **Ubuntu**
-
-```sh
-sudo apt update
-sudo apt install neovim
-```
-
-#### **Arch Linux**
-
-```sh
-sudo pacman -S neovim
-```
-
-**Recommended dependencies:**
-
-- `git` (of course)
-- latest version of node 
-- `ripgrep` (for fast search)
-- `fd` (for file finding)
-- `fzf` (optional, for fuzzy finding)
-- [Nerd Font](https://www.nerdfonts.com/) (install & set in your terminal)
-
-### 2. Clone this config
-
-First, back up your current config if you have one:
-
-```sh
-mv ~/.config/nvim ~/.config/nvim.backup
-```
-
-Then clone:
+Back up an existing configuration before cloning:
 
 ```sh
 git clone https://github.com/obazin/nvim-config.git ~/.config/nvim
 ```
 
-Open Neovim – plugins will auto-install via [lazy.nvim](https://github.com/folke/lazy.nvim).
+Launch Neovim, let Lazy install the plugins, then run `:Lazy restore` to reproduce
+the committed `lazy-lock.json`. Use `:Lazy update` deliberately and commit the
+resulting lockfile after verification. ToggleTerm's pin is retained even when
+updating from a terminal session; it only loads under Neovide.
 
+Run `:checkhealth plugins` for configuration prerequisites and `:checkhealth` for
+plugin-specific checks. Tree-sitter installs the requested missing parsers;
+`:TSUpdate` updates them after a plugin update.
 
-### Beginners guide
+## Project tools
 
-This repo features a [beginners friendly guide](./neovim-training.md) to help you in your neovim journey. Its purpose is to suggest a kind of
-training plan to build strong habits that will help you to feel free and fluent.
+Language servers, formatters, and debug adapters come from each project's
+`nix develop` shell or another environment exposing them on `PATH`. Start Neovim
+inside that environment. This repository's flake supplies `lua-language-server`
+and `stylua` for working on the configuration itself; it is not a complete IDE
+toolchain for every language.
 
+- Lua: LuaLS and StyLua, with Lazydev supplying Neovim/plugin libraries.
+- Python: Pyright for types, Ruff for linting and formatting. Interpreter discovery
+  checks a usable activated virtualenv, project-local virtualenvs, then Python on
+  `PATH`; otherwise Pyright handles discovery.
+- Shell: bash-language-server and shfmt. Both `sh` and `bash` buffers select shfmt.
+- Web languages: the configured HTML, CSS, Emmet, Svelte, VTSLS, and Tailwind servers.
+- Rust: rustaceanvim manages rust-analyzer and Rust debugging. Expose a compatible
+  CodeLLDB/liblldb installation through the project environment or Nix profile.
+- Docker/Compose and Typst: their configured servers must also be available.
 
-## Plugins Overview
+Conform formats on save, using LSP fallback except for C/C++. `<M-f>` requests
+formatting explicitly. `:ConformInfo` shows formatter availability and failures.
+Ruff attaches buffer-local `:RuffAutofix` and `:RuffOrganizeImports` commands.
 
-Here’s how plugins are grouped in this config:
+## Interfaces and editing
 
-### Visual Comfort
+| Purpose | Interface |
+|---|---|
+| Files, text, buffers, references | Telescope |
+| Fast positional jumps | Flash |
+| Document outline | Aerial (`<leader>o`) |
+| Diagnostics, references, quickfix/location lists | Trouble |
+| Persistent file tree and Git status tree | Neo-tree |
+| Terminal file-management workflow | Yazi |
+| Git signs, full-file blame, interactive Git | Gitsigns, blame.nvim, LazyGit |
+| Completion and snippets | Blink, native `vim.snippet`, friendly-snippets |
+| Textobjects and surroundings | Tree-sitter textobjects, Mini AI/Surround |
+| Comment lines or selections | Native `gcc` / `gc` |
+| Folds and folded-content preview | UFO (`zR`, `zM`, `zK`) |
+| Debugging | nvim-dap and dap-ui, with Rust integration |
+| AI terminal and diffs | claudecode.nvim |
 
-- **Themes**:
-  - [catppuccin](https://github.com/catppuccin/nvim)
-  - [nordic](https://github.com/AlexvZyl/nordic.nvim)
-  - [kanso](https://github.com/briones-gabriel/kanso.nvim)
-- **UI Enhancements**:
-  - `dashboard-nvim` (custom start screen, useful mainly to quickly reopen last edited files and have a clear view of
-  last projects)
-  - `noice.nvim` (better notifications and cmdline)
-  - `which-key.nvim` (keymap hintsby just by pressing leader key)
-  - `indent-blankline.nvim` (indent guides)
-  - `zen-mode.nvim` (distraction free mode)
-  - `dimming` (editor background dim)
-  - `mini.nvim` (UI tweaks)
-- **Folding & Conceal**:
-  - Better folding and conceal options for cleaner code
+Neo-tree and Yazi are retained for their distinct tree and terminal workflows.
+UFO is retained for folded-content preview. Aerial owns the outline shortcut;
+Trouble handles diagnostic and result lists. Themes remain available on startup
+so the theme picker can enumerate them, while shared Blink/Telescope startup
+requirements are explicit in their specs.
 
-### General Language Support
+The dashboard handles an empty launch. A single directory argument becomes the
+working directory and opens its dashboard. Files and piped stdin remain visible.
+Neovide overrides run after general options, and dashboard visibility is
+configured without forcing statuslines on every window event.
 
-- **LSP & Formatting**:
-  - `nvim-lspconfig` (provides healthy setups for most languages in conjonction with Mason)
-  - `conform.nvim` (formatting, linting)
-  - `blink` (completion)
-  - `nvim-treesitter` (highlighting, structure) configured with text objects
-- **Snippets**:
-  - [LuaSnip](https://github.com/L3MON4D3/LuaSnip) (if configured) & friendly-snippets 
+## Key mappings
 
-### Specific Language Support
+The leader is Space. Use `<leader>sk` to inspect mappings.
 
-The notes tag picker (`<leader>st`) reads a top-level `tags:` key in Markdown
-frontmatter. It accepts plain or quoted strings in a one-line `[a, b]` list,
-a block list, or a space/comma-separated scalar. Comments are ignored and
-duplicate tags count once per note. YAML aliases, mappings, multiline strings,
-and multiline flow lists are unsupported and reported instead of guessed.
-Frontmatter is read through its closing delimiter, without a 4 KB cutoff.
+| Keys | Action |
+|---|---|
+| `jj` / `jk` in Insert mode | Return to Normal mode without saving |
+| `<leader>ww` | Save the current buffer if modified |
+| `<leader>sf` / `<leader>sg` | Find files / grep |
+| `<leader>sm` | Files by modification time |
+| `<leader>st` | Notes by frontmatter tags |
+| `<leader>sx…` | Swap syntax objects; see the textobject reference |
+| `al` / `il` | Around/inside a Tree-sitter loop |
+| `s` / `S` | Flash jump / Tree-sitter jump |
+| `gsa` / `gsd` / `gsr` | Add / delete / replace surroundings |
+| `<leader>th` | Toggle inlay hints in the current buffer |
+| `<leader>ut` | Preview, select, and persist a colorscheme |
+| `<leader>lf` / `<leader>ngs` | Neo-tree files / Git status |
+| `<leader>-` / `<leader>f` | Yazi at the current file / working directory |
+| `<leader>o` | Toggle the document outline |
+| `{` / `}` in Aerial-supported buffers | Previous / next document symbol |
 
-- **Rust**:
-  - `rustaceanvim` (Rust tools)
-- **Tailwind CSS**:
-  - Tailwind tools integration
-- **Markdown/Notes**:
-  - Markdown preview & support
-  - [Obsidian.nvim](https://github.com/epwalsh/obsidian.nvim)
+Full structural mappings are in [textobjects-keybindings.md](textobjects-keybindings.md).
+The [training guide](neovim-training.md) introduces the underlying editing model.
 
-### IDE Features
+## Notes and custom pickers
 
-- **Navigation**:
+The notes picker finds the nearest `.notes` or `.obsidian` marker above the
+current file, then reads Markdown frontmatter. A top-level `tags:` key accepts
+plain or quoted strings in a one-line `[a, b]` list, a block list, or a
+space/comma-separated scalar. Double-quoted strings use JSON-style escapes.
+Comments are ignored and duplicate tags count once per note. YAML aliases,
+mappings, multiline strings, and multiline flow lists are unsupported and
+reported instead of guessed. Frontmatter is read through its closing delimiter,
+without a 4 KB cutoff. Select multiple tags with Tab for AND filtering.
 
-  - `telescope.nvim` (fuzzy find everything : files, symbols, class members, etc ...)
-  - `vim-tmux-navigator` (move between tmux/nvim panes)
-  - `aerial.nvim` (outline/symbols)
-  - `neo-tree.nvim` (file tree, *not started automatically when neovim opems a folder*, you can enable this behavior if you want)
+Both custom file pickers scan in an isolated Neovim worker process, keeping file
+reads and sorting off the editor thread. They honor ripgrep ignore rules, report
+scan errors, cancel superseded requests, and discard results if you switch
+buffers or directories before completion.
 
-- **Version Control**:
+## Verification and maintenance
 
-  - `lazygit.nvim`
+After installing/restoring the locked plugins, run from this repository:
 
-- **Editing**:
+```sh
+bash tests/run.sh
+stylua --check init.lua lua tests
+```
 
-  - `nvim-autopairs` (auto-close pairs)
-  - `Comment.nvim` (quick comments)
-  - `neoclip.nvim` (clipboard history)
-  - TODO highlighting (`todo-comments.nvim`)
+The regression suite uses temporary state/cache directories, exercises actual
+Telescope picker flows, and starts the full configuration in terminal and
+simulated Neovide modes. It disables parser downloads and Claude's listening
+service during startup checks. It does not launch a graphical Neovide session or
+exercise external debug adapters. Individual checks can be run with, for example,
+`bash tests/run.sh tests/lsp_test.lua`.
 
-- **Debug**:
-
-  - DAP (Debug Adapter Protocol) support and UI, set up mainly for Rust
-
-- **Troubleshooting**:
-
-  - `trouble.nvim` (diagnostics in a panel)
-
-- **Clipboard, Yazi (file manager integration), etc**
-
-### AI (Optional)
-
-- `avante` (great AI assistant made with offering a cursor-like experience to neovim users, without the price) 
-- (You can also uncomment ChatGPT, Copilot plugins if you want)
-
----
-
-## Customization
-
-- All config is split in the `lua/` folder for easier navigation.
-- You can add or remove plugins by editing/removing/adding the corresponding files in `lua/plugins/`.
-
----
+Keep imports in `init.lua`, configure only deliberate deviations from plugin
+defaults, and update the lockfile alongside plugin changes. See the
+[0.12 maintenance guide](NVIM_0.12_MIGRATION_GUIDE.md) for the native APIs used here.
 
 ## Credits
 
-- [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) for the original structure.
-- All plugin authors!
-
----
-
-## License
-
-MIT
-
+Based on [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim), with thanks
+to its authors and the authors of the included plugins.
