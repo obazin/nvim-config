@@ -41,7 +41,7 @@ return {
       -- - allow_remote_control socket-only
       -- - listen_on unix:/tmp/kitty
       kitty = {
-        enabled = true,
+        enabled = not vim.g.neovide and vim.env.KITTY_LISTEN_ON ~= nil,
         font = '+4', -- font size increment
       },
       -- this will change the font size on alacritty when in zen mode
@@ -54,7 +54,7 @@ return {
       -- this will change the font size on wezterm when in zen mode
       -- See alse also the Plugins/Wezterm section in this projects README
       wezterm = {
-        enabled = true,
+        enabled = not vim.g.neovide and vim.env.WEZTERM_PANE ~= nil,
         -- can be either an absolute font size or the number of incremental steps
         font = '+20', -- (10% increase per step)
       },

@@ -16,6 +16,7 @@ return {
 
     require('dashboard').setup {
       theme = 'hyper',
+      hide = { statusline = not vim.g.neovide },
       packages = { enable = false },
       config = {
         week_header = {

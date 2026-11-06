@@ -1,5 +1,5 @@
-require 'neovide'
 require 'options'
+require 'neovide'
 require 'keymaps'
 require 'autocommands'
 
