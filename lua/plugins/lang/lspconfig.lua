@@ -67,10 +67,7 @@ return { -- LSP Configuration & Plugins
           })
         end
 
-        if
-          client
-          and client:supports_method('textDocument/documentHighlight', { bufnr = event.buf })
-        then
+        if client and client:supports_method('textDocument/documentHighlight', { bufnr = event.buf }) then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
@@ -97,9 +94,7 @@ return { -- LSP Configuration & Plugins
         -- code, if the language server you are using supports them
         --
         -- This may be unwanted, since they displace some of your code
-        if
-          client and client:supports_method('textDocument/inlayHint', { bufnr = event.buf })
-        then
+        if client and client:supports_method('textDocument/inlayHint', { bufnr = event.buf }) then
           map('<leader>th', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
           end, '[T]oggle Inlay [H]ints')
@@ -298,40 +293,20 @@ return { -- LSP Configuration & Plugins
     })
 
     vim.lsp.config('ruff', {
-      commands = {
-        RuffAutofix = {
-          function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            local uri = vim.uri_from_bufnr(bufnr)
-            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
-              if client.name == 'ruff' then
-                client:exec_cmd {
-                  title = 'Apply Auto Fix',
-                  command = 'ruff.applyAutofix',
-                  arguments = { { uri = uri } },
-                }
-              end
-            end
-          end,
-          description = 'Ruff: Fix all auto-fixable problems',
-        },
-        RuffOrganizeImports = {
-          function()
-            local bufnr = vim.api.nvim_get_current_buf()
-            local uri = vim.uri_from_bufnr(bufnr)
-            for _, client in ipairs(vim.lsp.get_clients { bufnr = bufnr }) do
-              if client.name == 'ruff' then
-                client:exec_cmd {
-                  title = 'Organize Imports',
-                  command = 'ruff.applyOrganizeImports',
-                  arguments = { { uri = uri } },
-                }
-              end
-            end
-          end,
-          description = 'Ruff: Format imports',
-        },
-      },
+      on_attach = function(client, bufnr)
+        for _, command in ipairs {
+          { 'RuffAutofix', 'Fix all auto-fixable problems', 'ruff.applyAutofix' },
+          { 'RuffOrganizeImports', 'Organize imports', 'ruff.applyOrganizeImports' },
+        } do
+          vim.api.nvim_buf_create_user_command(bufnr, command[1], function()
+            client:exec_cmd({
+              title = command[2],
+              command = command[3],
+              arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
+            }, { bufnr = bufnr })
+          end, { desc = 'Ruff: ' .. command[2] })
+        end
+      end,
     })
 
     vim.lsp.config('tinymist', {
