@@ -10,7 +10,6 @@
 local M = {}
 
 local MARKERS = { '.notes', '.obsidian' }
-local FRONTMATTER_READ_BYTES = 4096
 
 local function find_notes_root()
   local start = vim.fn.expand '%:p:h'
@@ -25,77 +24,6 @@ local function find_notes_root()
   return nil
 end
 
-local function strip_quotes(s)
-  return (s:gsub('^["\']', ''):gsub('["\']$', ''))
-end
-
-local function parse_frontmatter_tags(filepath)
-  local f = io.open(filepath, 'r')
-  if not f then
-    return nil
-  end
-  local head = f:read(FRONTMATTER_READ_BYTES)
-  f:close()
-  if not head or not head:match '^%-%-%-%s*\n' then
-    return nil
-  end
-  local fm = head:match '^%-%-%-%s*\n(.-)\n%-%-%-'
-  if not fm then
-    return nil
-  end
-
-  local tags = {}
-
-  -- Inline form: tags: [a, b, "c d"]
-  local inline = fm:match 'tags:%s*%[(.-)%]'
-  if inline then
-    for tag in inline:gmatch '[^,]+' do
-      local t = vim.trim(tag)
-      if t ~= '' then
-        table.insert(tags, strip_quotes(t))
-      end
-    end
-    return tags
-  end
-
-  -- Scalar form: tags: foo   (single line, no brackets, no list)
-  -- Obsidian also accepts space/comma-separated scalars, e.g. tags: a b,c.
-  -- The `[^\n%[]` guard skips the inline `[...]` and the bare block `tags:` cases.
-  local scalar = fm:match 'tags:[ \t]+([^\n%[][^\n]*)'
-  if scalar then
-    scalar = vim.trim(scalar)
-    if scalar ~= '' then
-      for tag in scalar:gmatch '[^,%s]+' do
-        table.insert(tags, strip_quotes(tag))
-      end
-      if #tags > 0 then
-        return tags
-      end
-    end
-  end
-
-  -- Block form (items may be flush or indented — both are valid YAML and
-  -- Obsidian writes flush dashes):
-  -- tags:        tags:
-  -- - a            - a
-  -- - b            - b
-  local in_tags = false
-  for line in (fm .. '\n'):gmatch '([^\n]*)\n' do
-    if in_tags then
-      local item = line:match '^%s*%-%s*(.+)%s*$'
-      if item then
-        table.insert(tags, strip_quotes(vim.trim(item)))
-      elseif line == '' or line:match '^%S' then
-        in_tags = false
-      end
-    end
-    if line:match '^tags:%s*$' then
-      in_tags = true
-    end
-  end
-  return tags
-end
-
 local function scan_notes(root)
   local files = vim.fn.systemlist { 'rg', '--files', '-t', 'md', '--no-messages', root }
   if vim.v.shell_error ~= 0 then
@@ -105,7 +33,10 @@ local function scan_notes(root)
   local tag_counts = {}
   local file_to_tags = {}
   for _, file in ipairs(files) do
-    local tags = parse_frontmatter_tags(file)
+    local tags, err = require('custom.note-tags').read(file)
+    if err then
+      vim.notify('Cannot read tags in ' .. file .. ': ' .. err, vim.log.levels.WARN)
+    end
     if tags and #tags > 0 then
       file_to_tags[file] = tags
       for _, tag in ipairs(tags) do

@@ -102,6 +102,13 @@ Here’s how plugins are grouped in this config:
 
 ### Specific Language Support
 
+The notes tag picker (`<leader>st`) reads a top-level `tags:` key in Markdown
+frontmatter. It accepts plain or quoted strings in a one-line `[a, b]` list,
+a block list, or a space/comma-separated scalar. Comments are ignored and
+duplicate tags count once per note. YAML aliases, mappings, multiline strings,
+and multiline flow lists are unsupported and reported instead of guessed.
+Frontmatter is read through its closing delimiter, without a 4 KB cutoff.
+
 - **Rust**:
   - `rustaceanvim` (Rust tools)
 - **Tailwind CSS**:
