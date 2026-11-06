@@ -119,22 +119,10 @@ return { -- LSP Configuration & Plugins
       virtual_text = {
         source = 'if_many',
         spacing = 2,
-        format = function(diagnostic)
-          local diagnostic_message = {
-            [vim.diagnostic.severity.ERROR] = diagnostic.message,
-            [vim.diagnostic.severity.WARN] = diagnostic.message,
-            [vim.diagnostic.severity.INFO] = diagnostic.message,
-            [vim.diagnostic.severity.HINT] = diagnostic.message,
-          }
-          return diagnostic_message[diagnostic.severity]
-        end,
       },
     }
 
-    -- LSP servers and clients are able to communicate to each other what features they support.
-    --  By default, Neovim doesn't support everything that is in the LSP specification.
-    --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
-    --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
+    -- Advertise Blink's completion capabilities to every server.
     local capabilities = require('blink.cmp').get_lsp_capabilities()
     -- Broadcast blink.cmp capabilities to every server via the wildcard config.
     vim.lsp.config('*', { capabilities = capabilities })
@@ -167,28 +155,20 @@ return { -- LSP Configuration & Plugins
     end
 
     local servers = {
-      -- clangd = {},
-      -- gopls = {},
-      lua_ls = {},
-      html = {},
-      bashls = {},
-      cssls = {},
-      emmet_ls = {},
-      dockerls = {},
-      docker_compose_language_service = {},
-      pyright = {},
-      ruff = {},
-      svelte = {},
-      vtsls = {},
-      tailwindcss = {},
-      tinymist = {},
+      'lua_ls',
+      'html',
+      'bashls',
+      'cssls',
+      'emmet_ls',
+      'dockerls',
+      'docker_compose_language_service',
+      'pyright',
+      'ruff',
+      'svelte',
+      'vtsls',
+      'tailwindcss',
+      'tinymist',
     }
-
-    -- Register base config for each server. Detailed per-server overrides
-    -- below merge on top via additional vim.lsp.config() calls.
-    for server_name, server in pairs(servers) do
-      vim.lsp.config(server_name, server)
-    end
 
     vim.lsp.config('lua_ls', {
       settings = {
@@ -235,11 +215,7 @@ return { -- LSP Configuration & Plugins
       filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'svelte' },
     })
 
-    vim.lsp.config('tailwindcss', { -- exclude a filetype from the default_config
-      filetypes_exclude = { 'markdown' },
-      -- add additional filetypes to the default_config
-      filetypes_include = {},
-      -- to fully override the default_config, change the below
+    vim.lsp.config('tailwindcss', {
       filetypes = {
         'html',
         'css',
@@ -323,9 +299,8 @@ return { -- LSP Configuration & Plugins
       },
     })
 
-    -- Enable every configured server. Each only attaches if its executable is
-    -- found on $PATH (provided per-project by `nix develop`); missing ones are
-    -- silently skipped.
-    vim.lsp.enable(vim.tbl_keys(servers))
+    -- nvim-lspconfig supplies defaults; the overrides above merge into them.
+    -- Start Neovim inside the project's dev shell to expose its server tools.
+    vim.lsp.enable(servers)
   end,
 }
