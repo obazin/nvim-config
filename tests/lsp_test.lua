@@ -1,4 +1,5 @@
 T.plugin 'nvim-lspconfig'
+vim.g.mapleader = ' '
 local get_clients, get_client_by_id = vim.lsp.get_clients, vim.lsp.get_client_by_id
 package.loaded['blink.cmp'] = {
   get_lsp_capabilities = function()
@@ -96,4 +97,17 @@ T.eq(0, highlight_count(b1))
 T.eq(4, highlight_count(b2))
 T.eq(b1, cleared)
 T.eq(b2, vim.api.nvim_get_current_buf())
+clients[1].supports_method = function(_, method)
+  return method == 'textDocument/inlayHint'
+end
+event('LspAttach', b1, 1)
+local toggle = vim.api.nvim_buf_call(b1, function()
+  return vim.fn.maparg(' th', 'n', false, true).callback
+end)
 vim.lsp.get_clients, vim.lsp.get_client_by_id = get_clients, get_client_by_id
+vim.lsp.inlay_hint.enable(false)
+toggle()
+T.eq(true, vim.lsp.inlay_hint.is_enabled { bufnr = b1 })
+T.eq(false, vim.lsp.inlay_hint.is_enabled { bufnr = b2 })
+toggle()
+T.eq(false, vim.lsp.inlay_hint.is_enabled { bufnr = b1 })
