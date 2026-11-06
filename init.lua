@@ -50,7 +50,6 @@ require('lazy').setup {
   require 'plugins.ui-modules.mini',
   -- Tressitter support
   require 'plugins.lang.treesitter',
-  -- require 'plugins.lang.debug',
   require 'plugins.lang.markdown',
   require 'plugins.display.indent_line',
   require 'plugins.ui-modules.trouble',
@@ -60,7 +59,6 @@ require('lazy').setup {
   require 'plugins.editing.neoclip',
   require 'plugins.navigation.flash',
   vim.g.neovide and require 'plugins.ui-modules.toggleterm' or nil,
-  -- require 'plugins.display.gitsigns', -- adds gitsigns recommend keymaps
 }
 
 -- Restore last saved theme and register keymap
