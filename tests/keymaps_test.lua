@@ -21,3 +21,16 @@ verify()
 require('plugins.ui-modules.mini').config()
 require('plugins.lang.treesitter').config()
 verify()
+
+local executable, notify = vim.fn.executable, vim.notify
+local warnings = {}
+vim.fn.executable = function(name)
+  return name == 'tree-sitter' and 0 or executable(name)
+end
+vim.notify = function(message, level)
+  table.insert(warnings, { message, level })
+end
+require('plugins.lang.treesitter').config()
+T.eq(1, #warnings)
+T.eq(vim.log.levels.WARN, warnings[1][2])
+vim.fn.executable, vim.notify = executable, notify

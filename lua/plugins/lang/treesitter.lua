@@ -11,7 +11,7 @@ return { -- Highlight, edit, and navigate code
     { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
   },
   config = function()
-    if not vim.fn.executable 'tree-sitter' then
+    if vim.fn.executable 'tree-sitter' == 0 then
       vim.notify(
         'tree-sitter-cli not found. Install it (e.g. `brew install tree-sitter-cli`) for parser compilation.',
         vim.log.levels.WARN
