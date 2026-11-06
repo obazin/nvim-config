@@ -16,36 +16,14 @@ local function find_notes_root()
   if start == '' then
     start = vim.fn.getcwd()
   end
-  local hit = vim.fs.find(MARKERS, { upward = true, path = start, stop = vim.env.HOME, type = 'file' })[1]
-    or vim.fs.find(MARKERS, { upward = true, path = start, stop = vim.env.HOME, type = 'directory' })[1]
+  local hit = vim.fs.find(MARKERS, { upward = true, path = start, stop = vim.env.HOME })[1]
   if hit then
     return vim.fs.dirname(hit)
   end
   return nil
 end
 
-local function scan_notes(root)
-  local files = vim.fn.systemlist { 'rg', '--files', '-t', 'md', '--no-messages', root }
-  if vim.v.shell_error ~= 0 then
-    -- Fallback to find if rg is unavailable.
-    files = vim.fn.systemlist { 'find', root, '-type', 'f', '-name', '*.md' }
-  end
-  local tag_counts = {}
-  local file_to_tags = {}
-  for _, file in ipairs(files) do
-    local tags, err = require('custom.note-tags').read(file)
-    if err then
-      vim.notify('Cannot read tags in ' .. file .. ': ' .. err, vim.log.levels.WARN)
-    end
-    if tags and #tags > 0 then
-      file_to_tags[file] = tags
-      for _, tag in ipairs(tags) do
-        tag_counts[tag] = (tag_counts[tag] or 0) + 1
-      end
-    end
-  end
-  return tag_counts, file_to_tags
-end
+local cancel_scan
 
 local function open_notes_picker(matching, selected_tags, root)
   local pickers = require 'telescope.pickers'
@@ -76,19 +54,7 @@ local function open_notes_picker(matching, selected_tags, root)
     :find()
 end
 
-function M.pick()
-  local root = find_notes_root()
-  if not root then
-    vim.notify('No notes folder found (looked for ' .. table.concat(MARKERS, ' / ') .. ' upward)', vim.log.levels.WARN)
-    return
-  end
-
-  local tag_counts, file_to_tags = scan_notes(root)
-  if next(tag_counts) == nil then
-    vim.notify('No tagged notes under ' .. root, vim.log.levels.INFO)
-    return
-  end
-
+local function open_tags_picker(root, tag_counts, file_to_tags)
   local tag_list = {}
   for tag, count in pairs(tag_counts) do
     table.insert(tag_list, { tag = tag, count = count })
@@ -170,6 +136,38 @@ function M.pick()
       end,
     })
     :find()
+end
+function M.pick()
+  if cancel_scan then
+    cancel_scan()
+  end
+  local root = find_notes_root()
+  if not root then
+    vim.notify('No notes folder found (looked for ' .. table.concat(MARKERS, ' / ') .. ' upward)', vim.log.levels.WARN)
+    return
+  end
+  local cwd, buffer = vim.fn.getcwd(), vim.api.nvim_get_current_buf()
+  cancel_scan = require('custom.file-scan').scan('notes', root, function(result, err)
+    if vim.fn.getcwd() ~= cwd or vim.api.nvim_get_current_buf() ~= buffer then
+      return
+    end
+    if err then
+      vim.notify(err, vim.log.levels.ERROR)
+      return
+    end
+    if #result.errors > 0 then
+      local first = result.errors[1]
+      vim.notify(
+        string.format('Skipped tags in %d note(s). %s: %s', #result.errors, first.path, first.message),
+        vim.log.levels.WARN
+      )
+    end
+    if next(result.tag_counts) == nil then
+      vim.notify('No tagged notes under ' .. root, vim.log.levels.INFO)
+      return
+    end
+    open_tags_picker(root, result.tag_counts, result.file_to_tags)
+  end)
 end
 
 return M

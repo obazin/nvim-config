@@ -6,58 +6,13 @@
 
 local M = {}
 
-local IGNORE_GLOBS = {
-  '!.git/',
-  '!.venv/',
-  '!.env/',
-  '!env/',
-  '!*cache/',
-  '!node_modules/',
-  '!target/',
-}
+local cancel_scan
 
-local function list_files(root)
-  local cmd = { 'rg', '--files', '--hidden', '--no-messages' }
-  for _, g in ipairs(IGNORE_GLOBS) do
-    table.insert(cmd, '--glob')
-    table.insert(cmd, g)
-  end
-  table.insert(cmd, root)
-  local files = vim.fn.systemlist(cmd)
-  if vim.v.shell_error ~= 0 then
-    return {}
-  end
-  return files
-end
-
-local function collect_with_mtime(files)
-  local out = {}
-  for _, path in ipairs(files) do
-    local st = vim.uv.fs_stat(path)
-    if st and st.type == 'file' then
-      table.insert(out, { path = path, mtime = st.mtime.sec })
-    end
-  end
-  table.sort(out, function(a, b)
-    return a.mtime > b.mtime
-  end)
-  return out
-end
-
-function M.pick()
-  local root = vim.fn.getcwd()
-  local files = list_files(root)
-  local entries = collect_with_mtime(files)
-  if #entries == 0 then
-    vim.notify('No files found in ' .. root, vim.log.levels.INFO)
-    return
-  end
-
+local function open_picker(root, entries)
   local pickers = require 'telescope.pickers'
   local finders = require 'telescope.finders'
   local conf = require('telescope.config').values
   local entry_display = require 'telescope.pickers.entry_display'
-  local sorters = require 'telescope.sorters'
 
   local displayer = entry_display.create {
     separator = '  ',
@@ -88,10 +43,30 @@ function M.pick()
           }
         end,
       },
-      sorter = conf.file_sorter and conf.file_sorter {} or sorters.get_fuzzy_file(),
+      sorter = conf.file_sorter {},
       previewer = conf.file_previewer {},
     })
     :find()
+end
+function M.pick()
+  if cancel_scan then
+    cancel_scan()
+  end
+  local root, buffer = vim.fn.getcwd(), vim.api.nvim_get_current_buf()
+  cancel_scan = require('custom.file-scan').scan('mtime', root, function(result, err)
+    if vim.fn.getcwd() ~= root or vim.api.nvim_get_current_buf() ~= buffer then
+      return
+    end
+    if err then
+      vim.notify(err, vim.log.levels.ERROR)
+      return
+    end
+    if #result.entries == 0 then
+      vim.notify('No files found in ' .. root, vim.log.levels.INFO)
+      return
+    end
+    open_picker(root, result.entries)
+  end)
 end
 
 return M
