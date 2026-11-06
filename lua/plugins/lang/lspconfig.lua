@@ -12,6 +12,21 @@ return { -- LSP Configuration & Plugins
     -- lazydev.nvim is configured in completion.lua (modern replacement for neodev)
   },
   config = function()
+    local highlight_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = true })
+    vim.api.nvim_create_autocmd('LspDetach', {
+      group = vim.api.nvim_create_augroup('lsp-document-highlight-detach', { clear = true }),
+      callback = function(event)
+        for _, client in ipairs(vim.lsp.get_clients { bufnr = event.buf }) do
+          if
+            client.id ~= event.data.client_id and client:supports_method('textDocument/documentHighlight', event.buf)
+          then
+            return
+          end
+        end
+        vim.api.nvim_clear_autocmds { group = highlight_group, buffer = event.buf }
+        vim.api.nvim_buf_call(event.buf, vim.lsp.buf.clear_references)
+      end,
+    })
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
       callback = function(event)
@@ -59,26 +74,19 @@ return { -- LSP Configuration & Plugins
           client.server_capabilities.hoverProvider = false
         end
 
-        if client and client:supports_method('textDocument/documentHighlight', { bufnr = event.buf }) then
-          local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+        if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+          -- One set per buffer, even when several clients attach or restart.
+          vim.api.nvim_clear_autocmds { group = highlight_group, buffer = event.buf }
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
-            group = highlight_augroup,
+            group = highlight_group,
             callback = vim.lsp.buf.document_highlight,
           })
 
           vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
             buffer = event.buf,
-            group = highlight_augroup,
+            group = highlight_group,
             callback = vim.lsp.buf.clear_references,
-          })
-
-          vim.api.nvim_create_autocmd('LspDetach', {
-            group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-            callback = function(event2)
-              vim.lsp.buf.clear_references()
-              vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-            end,
           })
         end
 

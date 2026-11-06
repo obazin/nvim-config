@@ -1,4 +1,5 @@
 T.plugin 'nvim-lspconfig'
+local get_clients, get_client_by_id = vim.lsp.get_clients, vim.lsp.get_client_by_id
 package.loaded['blink.cmp'] = {
   get_lsp_capabilities = function()
     return {}
@@ -53,3 +54,46 @@ for _, buf in ipairs { b1, b2 } do
   vim.api.nvim_exec_autocmds('LspAttach', { buffer = buf, data = { client_id = 1 } })
 end
 T.eq(writes_before, #vim.api.nvim_get_autocmds { event = 'BufWritePost' })
+
+local clients = {}
+for id = 1, 3 do
+  clients[id] = {
+    id = id,
+    name = 'test',
+    supports_method = function(_, method)
+      return method == 'textDocument/documentHighlight'
+    end,
+  }
+end
+vim.lsp.get_client_by_id = function(id)
+  return clients[id]
+end
+vim.lsp.get_clients = function()
+  return { clients[1], clients[2] }
+end
+local function event(name, buf, id)
+  vim.api.nvim_exec_autocmds(name, { buffer = buf, data = { client_id = id } })
+end
+local function highlight_count(buf)
+  return #vim.api.nvim_get_autocmds { group = 'lsp-document-highlight', buffer = buf }
+end
+event('LspAttach', b1, 1)
+event('LspAttach', b1, 2)
+event('LspAttach', b2, 3)
+T.eq(4, highlight_count(b1))
+event('LspDetach', b1, 1)
+T.eq(4, highlight_count(b1))
+local cleared
+vim.lsp.buf.clear_references = function()
+  cleared = vim.api.nvim_get_current_buf()
+end
+vim.lsp.get_clients = function()
+  return { clients[2] }
+end
+vim.api.nvim_set_current_buf(b2)
+event('LspDetach', b1, 2)
+T.eq(0, highlight_count(b1))
+T.eq(4, highlight_count(b2))
+T.eq(b1, cleared)
+T.eq(b2, vim.api.nvim_get_current_buf())
+vim.lsp.get_clients, vim.lsp.get_client_by_id = get_clients, get_client_by_id
