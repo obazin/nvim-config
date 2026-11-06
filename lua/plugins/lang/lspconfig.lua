@@ -58,14 +58,6 @@ return { -- LSP Configuration & Plugins
         if client and client.name == 'ruff' then
           client.server_capabilities.hoverProvider = false
         end
-        if client and client.name == 'svelte' then
-          vim.api.nvim_create_autocmd('BufWritePost', {
-            pattern = { '*.js', '*.ts' },
-            callback = function(ctx)
-              client:notify('$/onDidChangeTsOrJsFile', { uri = ctx.match })
-            end,
-          })
-        end
 
         if client and client:supports_method('textDocument/documentHighlight', { bufnr = event.buf }) then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })

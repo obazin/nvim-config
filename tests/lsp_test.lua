@@ -36,3 +36,20 @@ for _, call in ipairs(calls) do
   T.eq(b1, call[2].bufnr)
 end
 T.eq(nil, vim.lsp.config.ruff.commands)
+
+-- Svelte's upstream on_attach owns JS/TS synchronization. Our shared callback
+-- must not add another global watcher for each attached Svelte buffer.
+T.eq('function', type(vim.lsp.config.svelte.on_attach))
+vim.lsp.get_client_by_id = function()
+  return {
+    name = 'svelte',
+    supports_method = function()
+      return false
+    end,
+  }
+end
+local writes_before = #vim.api.nvim_get_autocmds { event = 'BufWritePost' }
+for _, buf in ipairs { b1, b2 } do
+  vim.api.nvim_exec_autocmds('LspAttach', { buffer = buf, data = { client_id = 1 } })
+end
+T.eq(writes_before, #vim.api.nvim_get_autocmds { event = 'BufWritePost' })
