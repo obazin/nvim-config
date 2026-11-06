@@ -145,7 +145,7 @@ return { -- LSP Configuration & Plugins
     -- 3. System python3 fallback
     local function get_python_path(workspace)
       local venv = os.getenv 'VIRTUAL_ENV'
-      if venv then
+      if venv and venv ~= '' and vim.fn.executable(venv .. '/bin/python') == 1 then
         return venv .. '/bin/python'
       end
 
@@ -157,7 +157,13 @@ return { -- LSP Configuration & Plugins
         end
       end
 
-      return vim.fn.exepath 'python3' or 'python'
+      for _, name in ipairs { 'python3', 'python' } do
+        local path = vim.fn.exepath(name)
+        if path ~= '' then
+          return path
+        end
+      end
+      -- Leave pythonPath unset so Pyright can perform its own discovery.
     end
 
     local servers = {

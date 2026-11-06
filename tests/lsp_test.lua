@@ -111,3 +111,30 @@ T.eq(true, vim.lsp.inlay_hint.is_enabled { bufnr = b1 })
 T.eq(false, vim.lsp.inlay_hint.is_enabled { bufnr = b2 })
 toggle()
 T.eq(false, vim.lsp.inlay_hint.is_enabled { bufnr = b1 })
+
+local exepath, executable, virtual_env = vim.fn.exepath, vim.fn.executable, vim.env.VIRTUAL_ENV
+vim.env.VIRTUAL_ENV = nil
+vim.fn.executable = function()
+  return 0
+end
+local paths = {}
+vim.fn.exepath = function(name)
+  return paths[name] or ''
+end
+local function python_path()
+  local config = { root_dir = '/workspace', settings = { python = {} } }
+  vim.lsp.config.pyright.before_init({}, config)
+  return config.settings.python.pythonPath
+end
+T.eq(nil, python_path())
+paths.python = '/tools/python'
+T.eq('/tools/python', python_path())
+paths.python3 = '/tools/python3'
+T.eq('/tools/python3', python_path())
+vim.env.VIRTUAL_ENV = '/stale-venv'
+T.eq('/tools/python3', python_path())
+vim.fn.executable = function(path)
+  return path == '/workspace/.venv/bin/python' and 1 or 0
+end
+T.eq('/workspace/.venv/bin/python', python_path())
+vim.fn.exepath, vim.fn.executable, vim.env.VIRTUAL_ENV = exepath, executable, virtual_env
