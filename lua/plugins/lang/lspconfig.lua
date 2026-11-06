@@ -284,7 +284,7 @@ return { -- LSP Configuration & Plugins
             client:exec_cmd({
               title = command[2],
               command = command[3],
-              arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
+              arguments = { { uri = vim.uri_from_bufnr(bufnr), version = vim.lsp.util.buf_versions[bufnr] } },
             }, { bufnr = bufnr })
           end, { desc = 'Ruff: ' .. command[2] })
         end

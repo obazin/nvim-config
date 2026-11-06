@@ -19,6 +19,7 @@ local b2 = vim.api.nvim_create_buf(true, false)
 vim.api.nvim_buf_set_name(b1, '/tmp/audit-ruff-first.py')
 vim.api.nvim_buf_set_name(b2, '/tmp/audit-ruff-second.py')
 local calls = {}
+vim.lsp.util.buf_versions[b1] = 7
 local client = {
   exec_cmd = function(_, command, ctx)
     table.insert(calls, { command, ctx })
@@ -34,7 +35,7 @@ end)
 T.eq('ruff.applyAutofix', calls[1][1].command)
 T.eq('ruff.applyOrganizeImports', calls[2][1].command)
 for _, call in ipairs(calls) do
-  T.eq({ { uri = vim.uri_from_bufnr(b1) } }, call[1].arguments)
+  T.eq({ { uri = vim.uri_from_bufnr(b1), version = 7 } }, call[1].arguments)
   T.eq(b1, call[2].bufnr)
 end
 T.eq(nil, vim.lsp.config.ruff.commands)
