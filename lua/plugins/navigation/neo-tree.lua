@@ -37,9 +37,9 @@ return {
 
       -- Function to determine the sorting priority of a file
       local function get_priority(file)
-        local path = file.path
+        local path = file.name or vim.fs.basename(file.path)
 
-        if path:match '/%.' then
+        if path:match '^%.' then
           return 1
         end -- Dotfiles (highest priority)
         if path:match 'README%.md$' then
@@ -71,8 +71,8 @@ return {
       -- If priority is the same, apply further sorting rules:
       if priority_a == 3 then
         -- Group regular files by extension
-        local ext_a = a.path:match '^.+%.(.+)$' or ''
-        local ext_b = b.path:match '^.+%.(.+)$' or ''
+        local ext_a = (a.name or vim.fs.basename(a.path)):match '^.+%.(.+)$' or ''
+        local ext_b = (b.name or vim.fs.basename(b.path)):match '^.+%.(.+)$' or ''
         if ext_a ~= ext_b then
           return ext_a < ext_b
         end
