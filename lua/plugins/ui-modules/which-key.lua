@@ -19,6 +19,7 @@ return {
   opts = {
     spec = {
       { '<leader>s', group = '[S]earch' },
+      { '<leader>sx', group = 'Swap syntax objects' },
       { '<leader>u', group = '[U]I' },
     },
   },

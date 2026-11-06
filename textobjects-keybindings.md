@@ -57,12 +57,12 @@ Example: `]m` jumps to the next function definition, `[i` jumps back to the prev
 
 ## Swap
 
-Reorder adjacent code elements. `<leader>s` prefix. Lowercase = swap with next, uppercase = swap with previous.
+Reorder adjacent code elements. `<leader>sx` prefix. Lowercase = swap with next, uppercase = swap with previous.
 
 | Next           | Previous       | Object            |
 |----------------|----------------|-------------------|
-| `<leader>sa`   | `<leader>sA`   | Parameter/argument |
-| `<leader>s:`   | `<leader>s;`   | Object property    |
-| `<leader>sm`   | `<leader>sM`   | Method/function    |
+| `<leader>sxa`   | `<leader>sxA`   | Parameter/argument |
+| `<leader>sx:`   | `<leader>sx;`   | Object property    |
+| `<leader>sxm`   | `<leader>sxM`   | Method/function    |
 
-Example: with the cursor on a function argument, `<leader>sa` swaps it with the next argument.
+Example: with the cursor on a function argument, `<leader>sxa` swaps it with the next argument.
