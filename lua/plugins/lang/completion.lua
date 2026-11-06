@@ -1,6 +1,6 @@
 return {
   'saghen/blink.cmp',
-  event = 'VimEnter',
+  lazy = false, -- LSP setup needs Blink's capabilities during startup.
   version = '1.*',
   dependencies = {
     -- Blink loads these with Neovim's native snippet engine.
