@@ -7,7 +7,7 @@ return {
   config = function()
     -- If nvim was opened with a directory arg, we're already in a project
     local opened_in_dir = false
-    if vim.fn.argc() > 0 then
+    if vim.fn.argc() == 1 then
       local arg = vim.fn.argv(0)
       if vim.fn.isdirectory(arg) == 1 then
         opened_in_dir = true
