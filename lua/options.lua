@@ -45,13 +45,13 @@ if not vim.env.SSH_TTY and not vim.env.WAYLAND_DISPLAY and runtime_dir then
   end
 end
 if vim.env.SSH_TTY then
-  local osc52 = require('vim.ui.clipboard.osc52')
+  local osc52 = require 'vim.ui.clipboard.osc52'
   local function paste()
-    return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') }
+    return { vim.fn.split(vim.fn.getreg '', '\n'), vim.fn.getregtype '' }
   end
   vim.g.clipboard = {
     name = 'OSC 52',
-    copy = { ['+'] = osc52.copy('+'), ['*'] = osc52.copy('*') },
+    copy = { ['+'] = osc52.copy '+', ['*'] = osc52.copy '*' },
     paste = { ['+'] = paste, ['*'] = paste },
   }
 end
