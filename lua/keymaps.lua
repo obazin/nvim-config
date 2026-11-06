@@ -47,9 +47,10 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split buffer vertically' })
 vim.keymap.set('n', '<leader>wh', '<C-w>s', { desc = 'Split buffer horizontally' })
 
--- use jk to exit insert mode
-vim.keymap.set('i', 'jk', '<ESC>:w<CR>', opts)
-vim.keymap.set('i', 'jj', '<ESC>:w<CR>', opts)
+-- Leaving Insert mode should not write files or trigger formatting.
+vim.keymap.set('i', 'jk', '<Esc>', opts)
+vim.keymap.set('i', 'jj', '<Esc>', opts)
+vim.keymap.set('n', '<leader>ww', '<cmd>update<CR>', { desc = 'Write buffer if modified' })
 
 -- delete single character without copying into register
 vim.keymap.set('n', 'x', '"_x')
