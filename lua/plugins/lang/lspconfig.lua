@@ -168,6 +168,9 @@ return { -- LSP Configuration & Plugins
       'vtsls',
       'tailwindcss',
       'tinymist',
+      -- Not installed globally: found on PATH only inside a project whose dev
+      -- shell provides `slint-lsp`, so it starts there and nowhere else.
+      'slint_lsp',
     }
 
     vim.lsp.config('lua_ls', {
