@@ -36,6 +36,7 @@ return { -- Highlight, edit, and navigate code
       'python',
       'regex',
       'rust',
+      'slint',
       'svelte',
       'typescript',
       'tsx',
